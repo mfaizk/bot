@@ -1,0 +1,67 @@
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities;
+ */
+
+@import "tailwindcss";
+@plugin "daisyui";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply text-[#fff];
+  }
+}
+:root {
+  --color-primary: #ee3379;
+}
+
+@theme inline {
+  /* Configure your theme variables here */
+  --font-display: "Inter", "sans-serif";
+  --color-primary-500: oklch(0.68 0.23 341.45);
+  --spacing: 0.25rem;
+  --animate-scroll: scroll var(--animation-duration, 40s)
+    var(--animation-direction, forwards) linear infinite;
+
+  @keyframes scroll {
+    to {
+      transform: translate(calc(-50% - 0.5rem));
+    }
+  }
+}
+
+/* globals.css or an imported CSS module */
+.tv-widget-outer,
+.tradingview-widget-container {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* the internal widget div will grow/shrink automatically because of autosize: true */
+.tradingview-widget-container__widget {
+  width: 100%;
+  height: 100% !important;
+  min-height: 680px; /* fallback for very small screens */
+}
+
+/* example breakpoint tweaks */
+@media (max-width: 640px) {
+  .tradingview-widget-container__widget {
+    min-height: 520px;
+  }
+}
+
+.tradingview-widget-copyright {
+  display: none !important;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.tradingview-widget-container__widget {
+  height: 100% !important;
+  width: 100%;
+}
