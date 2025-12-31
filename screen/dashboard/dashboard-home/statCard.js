@@ -8,7 +8,7 @@ export default function StatCard({
   icon: Icon,
   currency,
   currencyIcon,
-  duration = 900, 
+  duration = 900,
 }) {
   const [count, setCount] = useState(0);
 
@@ -17,7 +17,7 @@ export default function StatCard({
     const end = typeof value === "number" ? value : parseFloat(value);
     if (isNaN(end)) return;
 
-    const increment = end / (duration / 16); 
+    const increment = end / (duration / 16);
 
     const handle = setInterval(() => {
       start += increment;
@@ -33,7 +33,7 @@ export default function StatCard({
   }, [value, duration]);
 
   return (
-    <div className="bg-[#12121a] border border-gray-800/50 rounded-2xl p-6 overflow-hidden">
+    <div className="bg-[#12121a] border border-gray-800/50 rounded-2xl p-6 overflow-hidden w-full">
       <div className="flex items-start justify-between mb-4">
         <h3 className="text-gray-400 text-sm font-normal">{title}</h3>
         <div className="bg-gray-800/30 p-2 rounded-lg">
@@ -42,7 +42,6 @@ export default function StatCard({
       </div>
       <div className="space-y-2">
         <div className="flex items-baseline gap-2">
-        
           <span
             className={`text-4xl font-semibold ${
               title === "Total Profit & Loss"
@@ -52,7 +51,8 @@ export default function StatCard({
                 : "text-white"
             }`}
           >
-           {currencyIcon && currencyIcon}{count.toLocaleString()}
+            {currencyIcon && currencyIcon}
+            {count.toLocaleString()}
           </span>
 
           {currency && (

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Eye, EyeOff, Info, Copy } from "lucide-react";
 import { IconExchange, IconTrashXFilled } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
@@ -18,6 +18,7 @@ import { toast } from "sonner";
 import ActivityIndicator from "@/components/activity-indicator";
 import clsx from "clsx";
 import SuccessModal from "../../../components/success-modal";
+import { useUserProfile } from "@/queries/profile";
 
 const exchangeOptions = [
   { label: "Mexc", value: "mexc", icon: "/assets/homepage/mexc.png" },
@@ -44,6 +45,7 @@ export default function AddExchange() {
     isLoading: exchangeKeyListLoading,
     refetch: exchangeKeyListRefetch,
   } = useGetKeysExchange();
+  const { data: profileData } = useUserProfile();
 
   const { mutateAsync: sendOtp, isPending: sendOtpPending } = useMutation({
     mutationFn: () => {
@@ -162,6 +164,24 @@ export default function AddExchange() {
     }
   };
 
+  const filteredExchangeOption = useMemo(() => {
+    if (
+      profileData?.subscriptionDetail?.[0]?.planStatus == "ACTIVE" &&
+      profileData?.subscriptionDetail?.[0]?.planName == "PRO"
+    ) {
+      return exchangeOptions;
+    }
+    return exchangeOptions?.filter((item) => item?.value != "mexc");
+  }, [profileData]);
+
+  const handleSelect = (val) => {
+    if (exchangeKeyList?.find((item) => item?.exchange == val)) {
+      toast.error("Please Delete exchnage credential before proceeding");
+      return;
+    }
+    setFormData({ ...formData, exchange: val });
+  };
+
   return (
     <div className="min-h-screen  ">
       <div className=" mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -176,11 +196,9 @@ export default function AddExchange() {
               <div className="mb-5">
                 <Dropdown
                   label="Select Exchange"
-                  options={exchangeOptions}
+                  options={filteredExchangeOption}
                   value={formData.exchange || ""}
-                  onSelect={(val) =>
-                    setFormData({ ...formData, exchange: val })
-                  }
+                  onSelect={handleSelect}
                   className="w-56"
                 />
                 {errors.exchange && (

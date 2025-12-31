@@ -6,10 +6,7 @@ import StatCard from "./statCard";
 import ProfitChart from "./profitChart";
 import CurrentPlan from "./currentPlan";
 import { ArrowLeftRight, Receipt, TrendingUp, Wallet } from "lucide-react";
-import {
-  
-  useHaveActiveSubscriptions,
-} from "@/queries/payment";
+import { useHaveActiveSubscriptions } from "@/queries/payment";
 import NotActiveSubs from "@/components/no-active-subs";
 import {
   useAccountDetails,
@@ -24,7 +21,6 @@ import { useUserProfile } from "@/queries/profile";
 
 export default function Dashboard() {
   const [selectedExchangeId, setselectedExchangeId] = useState("");
-  
 
   const { data: exchangeCount, isPending: exchangeCountPending } =
     useExchangeCount();
@@ -67,47 +63,36 @@ export default function Dashboard() {
   //   );
   // }
 
-
-
   return (
     <div className="min-h-screen  text-white ">
       <div className="max-w-[1600px] mx-auto">
         <DashboardHeader />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {/* <StatCard
-            title="Account Balance"
-            value={Number(balance)?.toFixed(2) || 0}
-            currency="(USDT)"
-            subtitle="Lock Balance : 0
-Available to Trade : 0"
-            icon={Wallet}
-          /> */}
-          <StatCard
-            title="Exchange"
-            value={exchangeCount}
-            subtitle="Connected Exchange"
-            icon={ArrowLeftRight}
-          />
-          <StatCard
-            title="Total Transactions"
-            value={trxCount}
-            subtitle="Transactions"
-            icon={Receipt}
-          />
-          <StatCard
-            title="Total Profit & Loss"
-            value={totalProfit}
-            currency="(USD)"
-            currencyIcon="$"
-            subtitle="Total Profit & Loss"
-            icon={TrendingUp}
-          />
-        </div>
-
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2 flex flex-col justify-between ">
             <ProfitChart />
+            <div className=" flex gap-2 flex-wrap md:flex-nowrap mt-4">
+              <StatCard
+                title="Exchange"
+                value={exchangeCount}
+                subtitle="Connected Exchange"
+                icon={ArrowLeftRight}
+              />
+              <StatCard
+                title="Total Transactions"
+                value={trxCount}
+                subtitle="Transactions"
+                icon={Receipt}
+              />
+              <StatCard
+                title="Total Profit & Loss"
+                value={totalProfit}
+                currency="(USD)"
+                currencyIcon="$"
+                subtitle="Total Profit & Loss"
+                icon={TrendingUp}
+              />
+            </div>
           </div>
           <div>
             <CurrentPlan activeSubs={activeSubs} />

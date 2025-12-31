@@ -1,4 +1,4 @@
-import { api } from "@/service/api-service";
+import { api, DCAbaseUrl, gridBotBaseUrl } from "@/service/api-service";
 import { useQuery } from "@tanstack/react-query";
 import { useGetKeysExchange } from "./exchange";
 
@@ -119,6 +119,48 @@ export const totalProfit = async () => {
       url: "/keys/totalProfit",
     });
     return response?.data?.result?.totalProfit || 0;
+  } catch (error) {
+    return 0;
+  }
+};
+
+export const useGridSummary = () => {
+  return useQuery({
+    queryKey: ["gridSummary"],
+    queryFn: () => {
+      return gridSummary();
+    },
+  });
+};
+
+export const gridSummary = async () => {
+  try {
+    const response = await api({
+      method: "GET",
+      url: `${gridBotBaseUrl}/dashboard/summary `,
+    });
+    return response?.data?.stats || {};
+  } catch (error) {
+    return 0;
+  }
+};
+
+export const useDcaSummary = () => {
+  return useQuery({
+    queryKey: ["dcaSummary"],
+    queryFn: () => {
+      return dcaSummary();
+    },
+  });
+};
+
+export const dcaSummary = async () => {
+  try {
+    const response = await api({
+      method: "GET",
+      url: `${DCAbaseUrl}/dashboard/summary `,
+    });
+    return response?.data || {};
   } catch (error) {
     return 0;
   }

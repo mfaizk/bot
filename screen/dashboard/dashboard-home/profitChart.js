@@ -1,110 +1,110 @@
 "use client";
+import { useDcaSummary, useGridSummary } from "@/queries/dashboard";
 import { useState } from "react";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
 
 export default function ProfitChart() {
-  const [filter, setFilter] = useState("month");
-
-  const data = [
-    { date: "Sep 5, 2025", totalProfit: 20, totalCapital: 0 },
-    { date: "Sep 6, 2025", totalProfit: 0, totalCapital: 20 },
-    { date: "Sep 24, 2025", totalProfit: 0, totalCapital: 0 },
-    { date: "Oct 5, 2025", totalProfit: 0, totalCapital: 0 },
-  ];
-
   return (
     <div className="w-full bg-[#0B0B12] text-white p-6 rounded-2xl shadow-lg">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold">
-          Profit & Loss Chart <span className="text-sm text-gray-400">(USD)</span>
-        </h2>
+      <BotStatsCards />
+    </div>
+  );
+}
 
-        <select
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-          className="bg-gray-800 text-white text-sm rounded-lg px-4 py-2 border border-gray-700 focus:outline-none"
-        >
-          <option value="week">Week</option>
-          <option value="month">Month</option>
-          <option value="year">Year</option>
-        </select>
+function BotStatsCards() {
+  const [activeTab, setActiveTab] = useState("grid");
+  const { data: dcaStats, isLoading: dcaSummaryLoading } = useDcaSummary();
+  const { data: gridStats, isLoading: gridSummaryLoading } = useGridSummary();
+  // console.log(dcaSummary, gridSummary, "asdasd");
+
+  // const gridStats = {
+  //   filledOrders: 1248,
+  //   realizedPnL: 248.73,
+  //   gridCycles: 87,
+  //   mostProfitableBot: {
+  //     symbol: "XRP/USDT",
+  //     exchange: "Bybit",
+  //     profit: 184.42,
+  //   },
+  // };
+
+  // const dcaStats = {
+  //   totalBots: 3,
+  //   runningBots: 2,
+  //   totalTrades: 18,
+  //   buyTrades: 10,
+  //   sellTrades: 8,
+  // };
+
+  const TabButton = ({ id, label }) => (
+    <button
+      onClick={() => setActiveTab(id)}
+      className={`px-4 py-2 text-sm font-medium rounded-lg transition
+        ${
+          activeTab === id
+            ? "bg-primary text-white"
+            : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+        }`}
+    >
+      {label}
+    </button>
+  );
+
+  const StatCard = ({ label, value, highlight }) => (
+    <div
+      className={`rounded-xl p-4 shadow-sm text-white
+        ${highlight ? "bg-primary " : "bg-secondary "}`}
+    >
+      <p className="text-xs ">{label}</p>
+      <p className="text-lg font-semibold ">{value}</p>
+    </div>
+  );
+
+  return (
+    <div className="w-full max-w-4xl mx-auto md:h-56 ">
+      {/* Tabs */}
+      <div className="flex gap-2 mb-12">
+        <TabButton id="grid" label="Grid Bot" />
+        <TabButton id="dca" label="DCA Bot" />
       </div>
 
-      <div className="w-full h-90 md:h-117 ">
-        <ResponsiveContainer>
-          <LineChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#1F2937" />
-            <XAxis
-              dataKey="date"
-              tick={{ fill: "#9CA3AF", fontSize: 12 }}
-              angle={-45}
-              textAnchor="end"
-              height={70}
+      {/* Grid Bot */}
+      {activeTab === "grid" && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <StatCard
+            label="Filled Orders"
+            value={gridStats?.filledOrders || 0}
+          />
+          <StatCard
+            label="Realized PnL"
+            value={`$${gridStats?.realizedPnL?.toFixed(2) || 0}`}
+            highlight
+          />
+          <StatCard label="Grid Cycles" value={gridStats?.gridCycles || 0} />
+          {gridStats?.mostProfitableBot && (
+            <StatCard
+              label="Top Bot Profit"
+              value={`${gridStats?.mostProfitableBot?.symbol} • $${
+                gridStats?.mostProfitableBot?.profit?.toFixed(2) || 0
+              }`}
+              highlight
             />
-            <YAxis
-              yAxisId="left"
-              label={{
-                value: "Profit & Loss (USD)",
-                angle: -90,
-                position: "insideLeft",
-                fill: "#9CA3AF",
-                fontSize: 12,
-              }}
-              tick={{ fill: "#9CA3AF" }}
-            />
-            <YAxis
-              yAxisId="right"
-              orientation="right"
-              label={{
-                value: "Capital (USD)",
-                angle: 90,
-                position: "insideRight",
-                fill: "#9CA3AF",
-                fontSize: 12,
-              }}
-              tick={{ fill: "#9CA3AF" }}
-            />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: "#1F2937",
-                border: "1px solid #374151",
-                borderRadius: "8px",
-              }}
-              labelStyle={{ color: "#F3F4F6" }}
-            />
-            <Legend verticalAlign="top" height={36} />
-            <Line
-              yAxisId="left"
-              type="monotone"
-              dataKey="totalProfit"
-              stroke="#fff"
-              strokeWidth={3}
-              dot={{ r: 6 }}
-              activeDot={{ r: 8 }}
-              name="Total Profit"
-            />
-            <Line
-              yAxisId="right"
-              type="monotone"
-              dataKey="totalCapital"
-              stroke="#F87171"
-              strokeWidth={3}
-              dot={{ r: 6 }}
-              activeDot={{ r: 8 }}
-              name="Total Capital"
-            />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
+          )}
+        </div>
+      )}
+      {/* DCA Bot */}
+      {activeTab === "dca" && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          <StatCard label="Total Bots" value={dcaStats?.totalBots || 0} />
+          <StatCard
+            label="Running Bots"
+            value={dcaStats?.runningBots || 0}
+            highlight
+          />
+          <StatCard label="Total Trades" value={dcaStats?.totalTrades || 0} />
+          <StatCard label="Buy Trades" value={dcaStats?.buyTrades || 0} />
+          <StatCard label="Sell Trades" value={dcaStats?.sellTrades || 0} />
+        </div>
+      )}
     </div>
   );
 }
