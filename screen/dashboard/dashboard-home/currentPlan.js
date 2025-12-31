@@ -55,7 +55,7 @@ export default function CurrentPlan({ activeSubs }) {
       </div>
 
       <div className="flex flex-col items-center justify-center py-8">
-        <div className="relative w-64 h-64 mb-8">
+        <div className="relative w-44 h-44 mb-8">
           <CircularProgressbar
             value={Percentage}
             styles={buildStyles({
@@ -70,7 +70,7 @@ export default function CurrentPlan({ activeSubs }) {
             })}
           />
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <div className="text-3xl font-semibold text-white">
+            <div className="text-xl font-semibold text-white">
               {/* {activeSubs?.duration == 7 ? "Unlimited" : profitCaptrimValue} */}
               Unlimited
             </div>
@@ -100,9 +100,7 @@ export default function CurrentPlan({ activeSubs }) {
             <div className="flex gap-1 flex-col w-full">
               <div className="w-full flex flex-row justify-between items-center">
                 <p>Max Bot Limit:</p>
-                <p>
-                  {permissionAsses || ""}
-                </p>
+                <p>{permissionAsses || ""}</p>
               </div>
               <div className="w-full flex flex-row justify-between items-center">
                 <p>Exchange Support:</p>

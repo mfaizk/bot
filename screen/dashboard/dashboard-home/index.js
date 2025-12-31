@@ -64,7 +64,7 @@ export default function Dashboard() {
   // }
 
   return (
-    <div className="min-h-screen  text-white ">
+    <div className=" text-white ">
       <div className="max-w-[1600px] mx-auto">
         <DashboardHeader />
 

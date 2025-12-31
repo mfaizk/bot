@@ -137,7 +137,7 @@ export const gridSummary = async () => {
   try {
     const response = await api({
       method: "GET",
-      url: `${gridBotBaseUrl}/dashboard/summary `,
+      url: `${gridBotBaseUrl}/dashboard/summary`,
     });
     return response?.data?.stats || {};
   } catch (error) {
