@@ -1,5 +1,6 @@
 "use client";
 import { useDcaSummary, useGridSummary } from "@/queries/dashboard";
+import { formatCurrency } from "@/utils";
 import { useState } from "react";
 
 export default function ProfitChart() {
@@ -83,9 +84,11 @@ function BotStatsCards() {
           {gridStats?.mostProfitableBot && (
             <StatCard
               label="Top Bot Profit"
-              value={`${gridStats?.mostProfitableBot?.symbol} • $${
-                gridStats?.mostProfitableBot?.profit?.toFixed(2) || 0
-              }`}
+              value={`${
+                gridStats?.mostProfitableBot?.symbol
+              } • $${formatCurrency(
+                gridStats?.mostProfitableBot?.profit || 0
+              )}`}
               highlight
             />
           )}
