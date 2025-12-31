@@ -141,7 +141,7 @@ export const gridSummary = async () => {
     });
     return response?.data?.stats || {};
   } catch (error) {
-    return 0;
+    return {};
   }
 };
 
@@ -162,6 +162,6 @@ export const dcaSummary = async () => {
     });
     return response?.data || {};
   } catch (error) {
-    return 0;
+    return {};
   }
 };
