@@ -192,10 +192,7 @@ export default function StartGridBot() {
                   <div className="bg-[#0b0b0d] border border-[#151518] rounded-xl p-4 text-sm leading-6">
                     <h3 className="font-semibold mb-2">About Grid Bot</h3>
                     <p className="text-gray-400">
-                      A fixed price range over which the trading bot will
-                      execute buy and sell orders divided into equal grid
-                      levels. Choose your price range and grid settings on the
-                      right.
+                     This is a long-only spot grid bot. It buys assets below the current market price and sells them higher for profit. There is no leverage, no short selling, and no selling without holding the asset. Profits are generated from repeated upward price movements within the defined grid range.
                     </p>
                   </div>
                 </div>
@@ -218,9 +215,7 @@ export default function StartGridBot() {
                         className="text-gray-400 cursor-pointer hover:text-gray-200"
                       />
                       <div className="absolute left-1/2 -translate-x-1/2 top-5 hidden group-hover:block bg-gray-800 text-gray-200 text-xs p-2 rounded-md shadow-lg w-64 z-10">
-                        The highest price at which the bot will place sell
-                        orders. If the market rises above this level, the bot
-                        will sell all held assets and stop trading.
+                        This determines how many grid levels are created between the lower and upper prices. Each grid level represents a buy-then-sell cycle. Increasing the grid count results in smaller price gaps and more frequent trades, while fewer grids result in larger price gaps and fewer trades. The grid levels are evenly distributed across the price range.
                       </div>
                     </div>
                   </div>
@@ -237,9 +232,7 @@ export default function StartGridBot() {
                         className="text-gray-400 cursor-pointer hover:text-gray-200"
                       />
                       <div className="absolute left-1/2 -translate-x-1/2 top-5 hidden group-hover:block bg-gray-800 text-gray-200 text-xs p-2 rounded-md shadow-lg w-64 z-10">
-                        The lowest price at which the bot will place buy orders.
-                        If the market drops below this level, the bot will sell
-                        all held assets for stablecoins and stop trading.
+                       This is the lowest price level where the bot is allowed to place buy orders. The bot is long-only and will never buy above the current market price. All buy orders are placed between the current market price and this lower limit. This value defines how far downward the bot is willing to accumulate the asset during price dips.
                       </div>
                     </div>
                   </div>
@@ -257,8 +250,7 @@ export default function StartGridBot() {
                         className="text-gray-400 cursor-pointer hover:text-gray-200"
                       />
                       <div className="absolute left-1/2 -translate-x-1/2 top-5 hidden group-hover:block bg-gray-800 text-gray-200 text-xs p-2 rounded-md shadow-lg w-64 z-10">
-                        The amount (in USD) allocated to each grid order.
-                        Determines the trade size for each buy or sell level.
+                        This represents the maximum take-profit price of the grid. After a buy order is filled, the bot sells the asset at the next higher grid level, capturing profit as price moves upward. When the price reaches the highest grid level, the bot executes a sell and completes that grid cycle. This value defines the upper profit boundary of the strategy.
                       </div>
                     </div>
                   </div>
@@ -276,15 +268,32 @@ export default function StartGridBot() {
                         className="text-gray-400 cursor-pointer hover:text-gray-200"
                       />
                       <div className="absolute left-1/2 -translate-x-1/2 top-5 hidden group-hover:block bg-gray-800 text-gray-200 text-xs p-2 rounded-md shadow-lg w-64 z-10">
-                        The number of intervals your price range will be divided
-                        into. More grids mean smaller profits per trade but more
-                        frequent trades.
+                       This value represents the intended capital allocation for the bot and helps you plan how much balance you want to dedicate to this strategy. At present, this amount is informational only and is not strictly enforced by the bot during order placement. Actual trades are executed based on the configured order size and the available balance on the exchange, so the bot may use more or less than this amount depending on market conditions and open orders.
                       </div>
                     </div>
                   </div>
 
                   <div className="text-base text-white">
                     {botData?.investment || 0}
+                  </div>
+                </div>
+
+                <div className="flex justify-between">
+                  <div className="flex items-center gap-2 text-sm text-gray-400 mb-1">
+                    SL Price
+                    <div className="relative group">
+                      <Info
+                        size={14}
+                        className="text-gray-400 cursor-pointer hover:text-gray-200"
+                      />
+                      <div className="absolute left-1/2 -translate-x-1/2 top-5 hidden group-hover:block bg-gray-800 text-gray-200 text-xs p-2 rounded-md shadow-lg w-64 z-10">
+                        This is an optional emergency protection level. If the market price falls to or below this value, the bot immediately cancels all open orders, sells any remaining balance at market price, and stops execution. This helps protect capital during sharp or unexpected market drops.
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="text-base text-white">
+                    {botData?.stopLossPrice || 0}
                   </div>
                 </div>
 
@@ -344,7 +353,7 @@ export default function StartGridBot() {
                   ) : (
                     <>
                       {botData?.status == "RUNNING"
-                        ? "Liquidate/Delete bot"
+                        ? "Liquidate/Delete "
                         : "Start"}{" "}
                       Bot
                     </>
@@ -360,7 +369,7 @@ export default function StartGridBot() {
                           : "text-green-500"
                       }
                     >
-                      ${Number(PNLData?.realizedPnL || 0).toFixed(2)}
+                      ${Number(PNLData?.realizedPnL || 0).toFixed(3)}
                     </span>
                   </p>
                   <p className="text-md text-gray-400">
@@ -370,7 +379,7 @@ export default function StartGridBot() {
                         PNLData?.trades < 0 ? "text-red-500" : "text-green-500"
                       }
                     >
-                      {Number(PNLData?.trades || 0).toFixed(2)}
+                      {Number(PNLData?.trades || 0).toFixed(0)}
                     </span>
                   </p>
                 </div>

@@ -54,12 +54,12 @@ export default function DashboardHeader() {
       Icon: Calendar,
       type: "link",
     },
-    {
-      label: "Transaction",
-      path: "/dashboard/transaction",
-      Icon: IconHistory,
-      type: "link",
-    },
+    // {
+    //   label: "Transaction",
+    //   path: "/dashboard/transaction",
+    //   Icon: IconHistory,
+    //   type: "link",
+    // },
     {
       label: "Settings",
       path: "/dashboard/settings",
