@@ -78,7 +78,7 @@ export default function Dashboard() {
                 subtitle="Connected Exchange"
                 icon={ArrowLeftRight}
               />
-              <StatCard
+              {/* <StatCard
                 title="Total Transactions"
                 value={trxCount}
                 subtitle="Transactions"
@@ -91,7 +91,7 @@ export default function Dashboard() {
                 currencyIcon="$"
                 subtitle="Total Profit & Loss"
                 icon={TrendingUp}
-              />
+              /> */}
             </div>
           </div>
           <div>
