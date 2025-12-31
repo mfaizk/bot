@@ -44,7 +44,7 @@ const validationSchema = Yup.object({
     .required("Investment are required"),
   orderSize: Yup.number()
     .typeError("orderSize must be a number")
-    .integer("Must be an integer")
+    // .integer("Must be an integer")
     .required("orderSize are required"),
   stopLossPrice: Yup.number()
     .typeError("stopLossPrice must be a number")
@@ -261,13 +261,15 @@ export default function CreateGridBot() {
                     {
                       name: "stopLossPrice",
                       label: "Stop Loss Price",
-                      tooltipInfo: "This is an optional emergency protection level. If the market price falls to or below this value, the bot immediately cancels all open orders, sells any remaining balance at market price, and stops execution. This helps protect capital during sharp or unexpected market drops.",
+                      tooltipInfo:
+                        "This is an optional emergency protection level. If the market price falls to or below this value, the bot immediately cancels all open orders, sells any remaining balance at market price, and stops execution. This helps protect capital during sharp or unexpected market drops.",
                       placeholder: "10",
                     },
                     {
                       name: "orderSize",
                       label: "Order Size",
-                      tooltipInfo: "This specifies the amount used for each individual buy order placed by the bot. Every grid buy uses this fixed quantity. Smaller order sizes result in more granular trades, while larger sizes increase exposure per trade. This value must be compatible with the exchange’s minimum order requirements.",
+                      tooltipInfo:
+                        "This specifies the amount used for each individual buy order placed by the bot. Every grid buy uses this fixed quantity. Smaller order sizes result in more granular trades, while larger sizes increase exposure per trade. This value must be compatible with the exchange’s minimum order requirements.",
                       placeholder: "10",
                     },
                     {

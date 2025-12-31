@@ -181,11 +181,10 @@ export default function Bot() {
                             <div className="flex justify-between mt-4">
                               <div>
                                 <h4 className="text-md font-semibold">
-                                  Investment amount
+                                  Exchange
                                 </h4>
-                                <p className="text-sm text-gray-300 mt-1">
-                                  {/* ${currentAmount?.toFixed(2) || "0.00"} */}
-                                  ${Number(item?.investment || 0) || "0.00"}
+                                <p className="text-sm text-gray-300 mt-1 capitalize">
+                                  {item?.exchange || "--"}
                                 </p>
                               </div>
                               <div>
@@ -247,21 +246,21 @@ export default function Bot() {
                               </div>
                             </div>
 
-                            {/* <h4 className="text-lg font-semibold mt-4">
-                              {item?.botName || "--"}
-                            </h4> */}
+                            <div className="flex flex-row justify-between items-end">
+                              <div className="flex flex-col mt-4  justify-between ">
+                                <h4 className="text-md font-semibold">
+                                  Exchange
+                                </h4>
+                                <p className="text-sm text-gray-300  capitalize mt-1">
+                                  {item?.config?.exchangeName || "--"}
+                                </p>
+                              </div>
+                              <div className="flex flex-col ">
+                                <h4 className="text-md font-semibold">Pair</h4>
 
-                            <div className="flex justify-between mt-4">
-                              <div>
                                 <p className="text-sm text-gray-300 mt-1">
                                   {item?.pair}
                                 </p>
-                                <p className="text-sm text-gray-300 mt-1">
-                                  {/* ${currentAmount?.toFixed(2) || "0.00"} */}
-                                </p>
-                              </div>
-                              <div>
-                                <h4 className="text-md font-semibold">Pair</h4>
                               </div>
                             </div>
                           </div>
