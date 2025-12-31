@@ -61,9 +61,9 @@ function BotStatsCards() {
   );
 
   return (
-    <div className="w-full max-w-4xl mx-auto md:h-56 ">
-      {/* Tabs */}
-      <div className="flex gap-2 mb-12">
+    <div className="w-full max-w-4xl mx-auto lg:h-56 ">
+      <p className="py-4 text-4xl">Statistics</p>
+      <div className="flex gap-2 mb-6">
         <TabButton id="grid" label="Grid Bot" />
         <TabButton id="dca" label="DCA Bot" />
       </div>
@@ -97,15 +97,15 @@ function BotStatsCards() {
       {/* DCA Bot */}
       {activeTab === "dca" && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-          <StatCard label="Total Bots" value={dcaStats?.totalBots || 0} />
+          <StatCard label="Total Bots" value={dcaStats?.total_bots || 0} />
           <StatCard
             label="Running Bots"
-            value={dcaStats?.runningBots || 0}
+            value={dcaStats?.running_bots || 0}
             highlight
           />
-          <StatCard label="Total Trades" value={dcaStats?.totalTrades || 0} />
-          <StatCard label="Buy Trades" value={dcaStats?.buyTrades || 0} />
-          <StatCard label="Sell Trades" value={dcaStats?.sellTrades || 0} />
+          <StatCard label="Total Trades" value={dcaStats?.total_trades || 0} />
+          <StatCard label="Buy Trades" value={dcaStats?.buy_trades || 0} />
+          <StatCard label="Sell Trades" value={dcaStats?.sell_trades || 0} />
         </div>
       )}
     </div>
