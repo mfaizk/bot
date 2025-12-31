@@ -60,12 +60,7 @@ export default function Bot() {
 
   const getStatus = (item) => {
     return {
-      status:
-        item?.status == "pending" ||
-        item?.status == "paused" ||
-        item?.status == "stopped"
-          ? "InActive"
-          : `Active`,
+      status: item?.status == "RUNNING" ? "Active" : `InActive`,
     };
   };
   const getDCAStatus = (item) => {
@@ -129,6 +124,7 @@ export default function Bot() {
               </div>
             </div>
             <>
+              {console.log(botList, "botList>>")}
               {selectedBotType == "grid" && (
                 <>
                   {botList?.length === 0 ? (

@@ -8,7 +8,9 @@ import {
 } from "@tanstack/react-query";
 
 const QueryProvider = ({ children, dehydratedState }) => {
-  const [queryClient] = React.useState(() => new QueryClient());
+  const [queryClient] = React.useState(
+    () => new QueryClient({ defaultOptions: { queries: { retry: 0 } } })
+  );
 
   return (
     <QueryClientProvider client={queryClient}>
