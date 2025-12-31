@@ -43,7 +43,7 @@ const GridBotOrders = ({ botId }) => {
             <thead>
               <tr className="text-left">
                 <th className="px-2 py-2 text-white">Side</th>
-                <th className="px-2 py-2 text-white">Status</th>
+                {/* <th className="px-2 py-2 text-white">Status</th> */}
                 <th className="px-2 py-2 text-white">Price</th>
                 <th className="px-2 py-2 text-white">Amount</th>
                 <th className="px-2 py-2 text-white">Notional (USD)</th>
@@ -67,7 +67,7 @@ const GridBotOrders = ({ botId }) => {
                     >
                       {item?.side || "--"}
                     </td>
-                    <td className="px-2 py-2">{item?.status || "--"}</td>
+                    {/* <td className="px-2 py-2">{item?.status || "--"}</td> */}
                     <td className="px-2 py-2">
                       {formatCurrency({ amount: item?.price, currency: "USD" })}
                     </td>

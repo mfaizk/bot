@@ -233,28 +233,28 @@ export default function EditGridBot() {
                       name: "highPrice",
                       label: "Upper Price Limit",
                       tooltipInfo:
-                        "The highest price at which the bot will place sell orders. If the market rises above this level, the bot will sell all held assets for stablecoins and stop trading.",
+                        "This represents the maximum take-profit price of the grid. After a buy order is filled, the bot sells the asset at the next higher grid level, capturing profit as price moves upward. When the price reaches the highest grid level, the bot executes a sell and completes that grid cycle. This value defines the upper profit boundary of the strategy.",
                       placeholder: "Below 144.291",
                     },
                     {
                       name: "lowPrice",
                       label: "Lower Price Limit",
                       tooltipInfo:
-                        "The lowest price at which the bot will place buy orders. If the market drops below this level, the bot will sell all held assets for stablecoins and stop trading.",
+                        "This is the lowest price level where the bot is allowed to place buy orders. The bot is long-only and will never buy above the current market price. All buy orders are placed between the current market price and this lower limit. This value defines how far downward the bot is willing to accumulate the asset during price dips.",
                       placeholder: "Above 77665.31",
                     },
                     {
-                      name: "quantity",
+                      name: "investment",
                       label: "Investment per Grid",
                       tooltipInfo:
-                        "The amount of USD the bot will use for each individual buy or sell order within the grid. This defines how much is invested per level.",
+                        "This value represents the intended capital allocation for the bot and helps you plan how much balance you want to dedicate to this strategy. At present, this amount is informational only and is not strictly enforced by the bot during order placement. Actual trades are executed based on the configured order size and the available balance on the exchange, so the bot may use more or less than this amount depending on market conditions and open orders.",
                       placeholder: "10",
                     },
                     {
-                      name: "gridLevels",
-                      label: "Number of Grids",
+                      name: "gridCount",
+                      label: "Grids Count",
                       tooltipInfo:
-                        "The number of intervals (price levels) your range will be divided into for placing buy and sell orders. More grids = smaller profit per trade but more frequent trades.",
+                        "This determines how many grid levels are created between the lower and upper prices. Each grid level represents a buy-then-sell cycle. Increasing the grid count results in smaller price gaps and more frequent trades, while fewer grids result in larger price gaps and fewer trades. The grid levels are evenly distributed across the price range.",
                       placeholder: "10",
                     },
                   ].map((f) => (

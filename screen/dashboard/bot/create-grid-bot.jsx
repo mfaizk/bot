@@ -18,17 +18,17 @@ const TradingViewWidget = dynamic(
 
 const validationSchema = Yup.object({
   gridLower: Yup.number()
-    .typeError("High price must be a number")
-    .positive("Must be positive")
-    .required("High price is required"),
-  gridLower: Yup.number()
-    .typeError("High price must be a number")
-    .positive("Must be positive")
-    .required("High price is required"),
-  gridUpper: Yup.number()
     .typeError("Low price must be a number")
     .positive("Must be positive")
     .required("Low price is required"),
+  gridLower: Yup.number()
+    .typeError("Low price must be a number")
+    .positive("Must be positive")
+    .required("Low price is required"),
+  gridUpper: Yup.number()
+    .typeError("High price must be a number")
+    .positive("Must be positive")
+    .required("High price is required"),
   investment: Yup.number()
     .typeError("Quantity must be a number")
     .positive("Must be positive")
@@ -241,40 +241,40 @@ export default function CreateGridBot() {
                       name: "gridLower",
                       label: "Grid Lower",
                       tooltipInfo:
-                        "The highest price at which the bot will place sell orders. If the market rises above this level, the bot will sell all held assets for stablecoins and stop trading.",
-                      placeholder: "Enter the higher range",
+                        "This is the lowest price level where the bot is allowed to place buy orders. The bot is long-only and will never buy above the current market price. All buy orders are placed between the current market price and this lower limit. This value defines how far downward the bot is willing to accumulate the asset during price dips.",
+                      placeholder: "Enter the lower range",
                     },
                     {
                       name: "gridUpper",
                       label: "Grid Upper",
                       tooltipInfo:
-                        "The lowest price at which the bot will place buy orders. If the market drops below this level, the bot will sell all held assets for stablecoins and stop trading.",
-                      placeholder: "Enter the lower range",
+                        "This represents the maximum take-profit price of the grid. After a buy order is filled, the bot sells the asset at the next higher grid level, capturing profit as price moves upward. When the price reaches the highest grid level, the bot executes a sell and completes that grid cycle. This value defines the upper profit boundary of the strategy.",
+                      placeholder: "Enter the higher range",
                     },
                     {
                       name: "investment",
                       label: "Investment",
                       tooltipInfo:
-                        "The amount of USD the bot will use for each individual buy or sell order within the grid. This defines how much is invested per level.",
+                        "This value represents the intended capital allocation for the bot and helps you plan how much balance you want to dedicate to this strategy. At present, this amount is informational only and is not strictly enforced by the bot during order placement. Actual trades are executed based on the configured order size and the available balance on the exchange, so the bot may use more or less than this amount depending on market conditions and open orders.",
                       placeholder: "10",
                     },
                     {
                       name: "stopLossPrice",
                       label: "Stop Loss Price",
-                      tooltipInfo: "stopLossPrice",
+                      tooltipInfo: "This is an optional emergency protection level. If the market price falls to or below this value, the bot immediately cancels all open orders, sells any remaining balance at market price, and stops execution. This helps protect capital during sharp or unexpected market drops.",
                       placeholder: "10",
                     },
                     {
                       name: "orderSize",
                       label: "Order Size",
-                      tooltipInfo: "orderSize",
+                      tooltipInfo: "This specifies the amount used for each individual buy order placed by the bot. Every grid buy uses this fixed quantity. Smaller order sizes result in more granular trades, while larger sizes increase exposure per trade. This value must be compatible with the exchange’s minimum order requirements.",
                       placeholder: "10",
                     },
                     {
                       name: "gridCount",
                       label: "Grids Count",
                       tooltipInfo:
-                        "The number of intervals (price levels) your range will be divided into for placing buy and sell orders. More grids = smaller profit per trade but more frequent trades.",
+                        "This determines how many grid levels are created between the lower and upper prices. Each grid level represents a buy-then-sell cycle. Increasing the grid count results in smaller price gaps and more frequent trades, while fewer grids result in larger price gaps and fewer trades. The grid levels are evenly distributed across the price range.",
                       placeholder: "10",
                     },
                   ].map((f) => (
@@ -327,9 +327,9 @@ export default function CreateGridBot() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <Toggle
                       name="enableIndicators"
-                      label="Indicator"
+                      label="Enable Smart Indicators"
                       tooltip={
-                        "When enabled, the bot will only start or expand grids when RSI remains between 40 and 60.If RSI moves outside this range, the bot pauses new grid placements due to strong momentum."
+                        "When enabled, the bot will not start immediately. Instead, it waits until all predefined technical indicator conditions are satisfied. These include trend, momentum, and market strength checks. If conditions are not met, the bot remains in a waiting state and automatically rechecks the indicators at regular intervals before starting."
                       }
                     />
                   </div>
