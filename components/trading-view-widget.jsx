@@ -48,7 +48,6 @@ const TradingViewWidget = ({ symbol }) => {
       return [...prev, ohlcvData.data].sort((a, b) => a.time - b.time);
     });
   }, [ohlcvData?.data]);
-  console.log(graphDataArray, "graphDataArray>>");
 
   return (
     <div ref={chartContainerRef} className="w-full h-[500px]">
