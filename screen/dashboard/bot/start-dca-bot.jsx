@@ -118,7 +118,7 @@ export default function StartDCABot() {
               <div className="mt-6 grid grid-cols-1 lg:grid-cols-1 gap-6">
                 <div className="lg:col-span-2">
                   <div className=" h-[500px]">
-                    <TradingViewWidget symbol={botData?.symbol} />
+                    <TradingViewWidget symbol={botData?.pair} />
                   </div>
 
                   <div className=" flex items-start justify-center mt-12">
