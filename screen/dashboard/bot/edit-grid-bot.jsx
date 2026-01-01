@@ -293,7 +293,8 @@ export default function EditGridBot() {
                   <label className="block">
                     <div className="flex items-center gap-2 text-md text-gray-400 mb-1">
                       <span>
-                      Profit per Grid in %{" "}  <span className="text-sm">(Optional)</span>
+                        Profit per Grid in %{" "}
+                        <span className="text-sm">(Optional)</span>
                       </span>
 
                       <div className="relative group">

@@ -10,7 +10,6 @@ import { createBot, createDCABots, useGetSymbolList } from "@/queries/bot"; // <
 import { toast } from "sonner";
 import { useGetKeysExchange } from "@/queries/exchange";
 import { Info } from "lucide-react";
-import { useWatchOHLCV } from "@/hooks/useWatchOHLCV";
 const TradingViewWidget = dynamic(
   () => import("@/components/trading-view-widget"),
   { ssr: false }
@@ -222,7 +221,7 @@ export default function CreateDCABot() {
                     options={exchangeList?.map((item) => {
                       return {
                         label: item?.exchange,
-                        value: item?.id,
+                        value: item?.exchange,
                         icon: item?.icon,
                       };
                     })}
@@ -251,10 +250,7 @@ export default function CreateDCABot() {
               <div className="mt-6 grid grid-cols-1 lg:grid-cols-1 gap-6">
                 <div className="lg:col-span-2">
                   <div className="h-[500px]">
-                    <TradingViewWidget
-                      symbol={pair || "BTC/USDT"}
-                      exchange={selectedExchange}
-                    />
+                    <TradingViewWidget symbol={pair || "BTC/USDT"} />
                   </div>
                 </div>
               </div>

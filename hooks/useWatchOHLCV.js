@@ -1,64 +1,56 @@
 import { wssBaseUrl } from "@/service/api-service";
 import { useEffect, useRef, useState } from "react";
-
-/**
- * Hook to subscribe to live OHLCV (candlestick) data
- * @param {Object} params
- * @param {string} params.symbol - Trading pair symbol, e.g. "BTC/USDT"
- * @param {string} params.timeframe - Time interval, e.g. "1m", "5m", "1h"
- * @param {number} params.limit - Number of candles to fetch
- */
-export const useWatchOHLCV = ({
-  symbol = "BTC/USDT",
-  timeframe = "1m",
-  limit = 100,
-  exchange = "binance",
-}) => {
-  const [ohlcvData, setOhlcvData] = useState(null);
-  const [isConnected, setIsConnected] = useState(false);
+export const TIMEFRAMES = [
+  { label: "1m", value: "1m" },
+  { label: "5m", value: "5m" },
+  { label: "15m", value: "15m" },
+  { label: "1h", value: "60m" },
+  { label: "1D", value: "1D" },
+];
+export const useWatchOHLCV = ({ symbol = "BTCUSDT", timeframe = "1m" }) => {
   const wsRef = useRef(null);
+  const [data, setData] = useState(null);
+  const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
     const ws = new WebSocket(wssBaseUrl);
     wsRef.current = ws;
-
     ws.onopen = () => {
       setIsConnected(true);
-      console.log("WebSocket connected (OHLCV)");
-
-      const payload = {
-        op: "subscribe",
-        exchange: exchange,
-        method: "watchOHLCV",
-        symbol,
-        timeframe,
-        limit,
-      };
-
-      ws.send(JSON.stringify(payload));
+      ws.send(
+        JSON.stringify({
+          type: "subscribe",
+          symbol: symbol.replace("/", ""),
+          timeframe,
+        })
+      );
     };
 
-    ws.onmessage = (event) => {
+    ws.onmessage = (e) => {
       try {
-        const data = JSON.parse(event.data);
+        const c = JSON.parse(e.data);
 
-        setOhlcvData(data?.data);
+        // IMPORTANT: time in SECONDS
+        const bar = {
+          time: c.time, // already seconds
+          open: c.open,
+          high: c.high,
+          low: c.low,
+          close: c.close,
+          volume: c.volume,
+        };
+
+        setData(bar);
       } catch (err) {
-        console.log("Error parsing OHLCV data:", err);
+        console.error("❌ Parse error", err);
       }
     };
 
-    ws.onerror = (err) => console.log("WebSocket error (OHLCV):", err);
+    ws.onclose = () => setIsConnected(false);
+    ws.onerror = (e) => console.error("❌ WSS error", e);
 
-    ws.onclose = () => {
-      setIsConnected(false);
-      console.log("🔌 WebSocket disconnected (OHLCV)");
-    };
+    return () => ws.close();
+  }, [symbol, timeframe]);
 
-    return () => {
-      ws.close();
-    };
-  }, [symbol, timeframe, limit, exchange]);
-
-  return { ohlcvData, isConnected };
+  return { data, isConnected };
 };

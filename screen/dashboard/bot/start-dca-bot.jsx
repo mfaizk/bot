@@ -29,7 +29,6 @@ import {
   TriangleAlert,
 } from "lucide-react";
 import Modal from "@/components/ui/modal";
-import { useWatchOHLCV } from "@/hooks/useWatchOHLCV";
 import DCABotTrades from "./start-dca-bot-components/trades";
 import DCABotLogs from "./start-dca-bot-components/logs";
 
@@ -119,10 +118,7 @@ export default function StartDCABot() {
               <div className="mt-6 grid grid-cols-1 lg:grid-cols-1 gap-6">
                 <div className="lg:col-span-2">
                   <div className=" h-[500px]">
-                    <TradingViewWidget
-                      symbol={botData?.symbol}
-                      exchange={botData?.exchangeKeyId}
-                    />
+                    <TradingViewWidget symbol={botData?.symbol} />
                   </div>
 
                   <div className=" flex items-start justify-center mt-12">
@@ -143,7 +139,7 @@ export default function StartDCABot() {
                               className={clsx(
                                 "cursor-pointer",
                                 (filledRefetchloading || logRefetchLoading) &&
-                                "animate-spin"
+                                  "animate-spin"
                               )}
                             />
                           </div>
@@ -165,8 +161,9 @@ export default function StartDCABot() {
                     <p className="text-gray-400">
                       This DCA bot automatically buys in multiple small entries
                       instead of one large order. It helps reduce the average
-                      entry price during market dips and controls risk using your
-                      defined buy size, max allocation, and safety settings.
+                      entry price during market dips and controls risk using
+                      your defined buy size, max allocation, and safety
+                      settings.
                     </p>
                   </div>
                 </div>
@@ -349,7 +346,9 @@ export default function StartDCABot() {
 
                 {/* Exchange Name */}
                 <div className="flex justify-between">
-                  <div className="text-sm text-gray-400 mb-1">Exchange Name</div>
+                  <div className="text-sm text-gray-400 mb-1">
+                    Exchange Name
+                  </div>
                   <div className="text-base text-white capitalize">
                     {botData?.config?.exchangeName || "--"}
                   </div>
@@ -386,12 +385,14 @@ export default function StartDCABot() {
                 </button>
 
                 <div className="space-y-3 text-sm">
-
                   {/* Avg Entry Price */}
                   <div className="flex justify-between text-gray-400">
                     <span>Avg Entry Price</span>
                     <span className="text-white">
-                      $ {Number(botPNL?.unrealized?.avgEntryPrice || 0).toFixed(4)}
+                      ${" "}
+                      {Number(botPNL?.unrealized?.avgEntryPrice || 0).toFixed(
+                        4
+                      )}
                     </span>
                   </div>
 
@@ -399,7 +400,8 @@ export default function StartDCABot() {
                   <div className="flex justify-between text-gray-400">
                     <span>Current Price</span>
                     <span className="text-white">
-                      $ {Number(botPNL?.unrealized?.currentPrice || 0).toFixed(4)}
+                      ${" "}
+                      {Number(botPNL?.unrealized?.currentPrice || 0).toFixed(4)}
                     </span>
                   </div>
 
@@ -413,9 +415,16 @@ export default function StartDCABot() {
                           : "text-green-500"
                       }
                     >
-                      $ {Number(botPNL?.unrealized?.unrealizedPnl || 0).toFixed(4)}
+                      ${" "}
+                      {Number(botPNL?.unrealized?.unrealizedPnl || 0).toFixed(
+                        4
+                      )}
                       <span className="ml-1 text-xs text-gray-400">
-                        ({Number(botPNL?.unrealized?.unrealizedPnlPct || 0).toFixed(2)}%)
+                        (
+                        {Number(
+                          botPNL?.unrealized?.unrealizedPnlPct || 0
+                        ).toFixed(2)}
+                        %)
                       </span>
                     </span>
                   </div>
@@ -434,7 +443,8 @@ export default function StartDCABot() {
                             : "text-green-500"
                         }
                       >
-                        $ {Number(botPNL?.realized?.realizedPnl || 0).toFixed(2)}
+                        ${" "}
+                        {Number(botPNL?.realized?.realizedPnl || 0).toFixed(2)}
                       </span>
                     </p>
 
@@ -448,7 +458,6 @@ export default function StartDCABot() {
                     />
                   </div>
                 </div>
-
               </div>
             </aside>
           </main>

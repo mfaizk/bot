@@ -24,7 +24,6 @@ import {
   TriangleAlert,
 } from "lucide-react";
 import Modal from "@/components/ui/modal";
-import { useWatchOHLCV } from "@/hooks/useWatchOHLCV";
 import GridBotOrders from "./start-grid-bot-components/order";
 import GridBotTrades from "./start-grid-bot-components/trades";
 import GridBotLogs from "./start-grid-bot-components/logs";
@@ -100,22 +99,6 @@ export default function StartGridBot() {
     },
   });
 
-  const exchangeName = useMemo(() => {
-    return exchangeData?.find((item) => item?.id == botData?.exchangeKeyId)
-      ?.exchange;
-  }, [exchangeData, botData]);
-
-  const ohlcvData = useWatchOHLCV({
-    symbol: botData?.symbol,
-    exchange: exchangeName ? exchangeName : undefined,
-  });
-
-  const currentAmount = useMemo(() => {
-    const data =
-      botData?.params?.gridLevel * 2 * botData?.params?.quantityPerGridUSD;
-    return data;
-  }, [ohlcvData, botData]);
-
   const isBotRunning = useMemo(() => {
     return botData?.status == "RUNNING";
   }, [botData]);
@@ -143,10 +126,7 @@ export default function StartGridBot() {
               <div className="mt-6 grid grid-cols-1 lg:grid-cols-1 gap-6">
                 <div className="lg:col-span-2">
                   <div className=" h-[500px]">
-                    <TradingViewWidget
-                      symbol={botData?.symbol}
-                      exchange={botData?.exchange}
-                    />
+                    <TradingViewWidget symbol={botData?.symbol} />
                   </div>
 
                   <div className=" flex items-start justify-center mt-12">
@@ -192,7 +172,12 @@ export default function StartGridBot() {
                   <div className="bg-[#0b0b0d] border border-[#151518] rounded-xl p-4 text-sm leading-6">
                     <h3 className="font-semibold mb-2">About Grid Bot</h3>
                     <p className="text-gray-400">
-                     This is a long-only spot grid bot. It buys assets below the current market price and sells them higher for profit. There is no leverage, no short selling, and no selling without holding the asset. Profits are generated from repeated upward price movements within the defined grid range.
+                      This is a long-only spot grid bot. It buys assets below
+                      the current market price and sells them higher for profit.
+                      There is no leverage, no short selling, and no selling
+                      without holding the asset. Profits are generated from
+                      repeated upward price movements within the defined grid
+                      range.
                     </p>
                   </div>
                 </div>
@@ -215,7 +200,13 @@ export default function StartGridBot() {
                         className="text-gray-400 cursor-pointer hover:text-gray-200"
                       />
                       <div className="absolute left-1/2 -translate-x-1/2 top-5 hidden group-hover:block bg-gray-800 text-gray-200 text-xs p-2 rounded-md shadow-lg w-64 z-10">
-                        This determines how many grid levels are created between the lower and upper prices. Each grid level represents a buy-then-sell cycle. Increasing the grid count results in smaller price gaps and more frequent trades, while fewer grids result in larger price gaps and fewer trades. The grid levels are evenly distributed across the price range.
+                        This determines how many grid levels are created between
+                        the lower and upper prices. Each grid level represents a
+                        buy-then-sell cycle. Increasing the grid count results
+                        in smaller price gaps and more frequent trades, while
+                        fewer grids result in larger price gaps and fewer
+                        trades. The grid levels are evenly distributed across
+                        the price range.
                       </div>
                     </div>
                   </div>
@@ -232,7 +223,12 @@ export default function StartGridBot() {
                         className="text-gray-400 cursor-pointer hover:text-gray-200"
                       />
                       <div className="absolute left-1/2 -translate-x-1/2 top-5 hidden group-hover:block bg-gray-800 text-gray-200 text-xs p-2 rounded-md shadow-lg w-64 z-10">
-                       This is the lowest price level where the bot is allowed to place buy orders. The bot is long-only and will never buy above the current market price. All buy orders are placed between the current market price and this lower limit. This value defines how far downward the bot is willing to accumulate the asset during price dips.
+                        This is the lowest price level where the bot is allowed
+                        to place buy orders. The bot is long-only and will never
+                        buy above the current market price. All buy orders are
+                        placed between the current market price and this lower
+                        limit. This value defines how far downward the bot is
+                        willing to accumulate the asset during price dips.
                       </div>
                     </div>
                   </div>
@@ -250,7 +246,13 @@ export default function StartGridBot() {
                         className="text-gray-400 cursor-pointer hover:text-gray-200"
                       />
                       <div className="absolute left-1/2 -translate-x-1/2 top-5 hidden group-hover:block bg-gray-800 text-gray-200 text-xs p-2 rounded-md shadow-lg w-64 z-10">
-                        This represents the maximum take-profit price of the grid. After a buy order is filled, the bot sells the asset at the next higher grid level, capturing profit as price moves upward. When the price reaches the highest grid level, the bot executes a sell and completes that grid cycle. This value defines the upper profit boundary of the strategy.
+                        This represents the maximum take-profit price of the
+                        grid. After a buy order is filled, the bot sells the
+                        asset at the next higher grid level, capturing profit as
+                        price moves upward. When the price reaches the highest
+                        grid level, the bot executes a sell and completes that
+                        grid cycle. This value defines the upper profit boundary
+                        of the strategy.
                       </div>
                     </div>
                   </div>
@@ -268,7 +270,15 @@ export default function StartGridBot() {
                         className="text-gray-400 cursor-pointer hover:text-gray-200"
                       />
                       <div className="absolute left-1/2 -translate-x-1/2 top-5 hidden group-hover:block bg-gray-800 text-gray-200 text-xs p-2 rounded-md shadow-lg w-64 z-10">
-                       This value represents the intended capital allocation for the bot and helps you plan how much balance you want to dedicate to this strategy. At present, this amount is informational only and is not strictly enforced by the bot during order placement. Actual trades are executed based on the configured order size and the available balance on the exchange, so the bot may use more or less than this amount depending on market conditions and open orders.
+                        This value represents the intended capital allocation
+                        for the bot and helps you plan how much balance you want
+                        to dedicate to this strategy. At present, this amount is
+                        informational only and is not strictly enforced by the
+                        bot during order placement. Actual trades are executed
+                        based on the configured order size and the available
+                        balance on the exchange, so the bot may use more or less
+                        than this amount depending on market conditions and open
+                        orders.
                       </div>
                     </div>
                   </div>
@@ -287,7 +297,11 @@ export default function StartGridBot() {
                         className="text-gray-400 cursor-pointer hover:text-gray-200"
                       />
                       <div className="absolute left-1/2 -translate-x-1/2 top-5 hidden group-hover:block bg-gray-800 text-gray-200 text-xs p-2 rounded-md shadow-lg w-64 z-10">
-                        This is an optional emergency protection level. If the market price falls to or below this value, the bot immediately cancels all open orders, sells any remaining balance at market price, and stops execution. This helps protect capital during sharp or unexpected market drops.
+                        This is an optional emergency protection level. If the
+                        market price falls to or below this value, the bot
+                        immediately cancels all open orders, sells any remaining
+                        balance at market price, and stops execution. This helps
+                        protect capital during sharp or unexpected market drops.
                       </div>
                     </div>
                   </div>

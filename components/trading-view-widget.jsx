@@ -6,48 +6,79 @@ import {
   TimeScaleFitContentTrigger,
 } from "lightweight-charts-react-components";
 import ActivityIndicator from "@/components/activity-indicator";
-import { useWatchOHLCV } from "@/hooks/useWatchOHLCV";
+import { TIMEFRAMES, useWatchOHLCV } from "@/hooks/useWatchOHLCV";
 import { memo, useEffect, useMemo, useRef, useState } from "react";
-import { useGetKeysExchange } from "@/queries/exchange";
-const TradingViewWidget = ({ symbol, exchange }) => {
-  const { data: exchangeList, isPending: exchangeListPending } =
-    useGetKeysExchange();
+import clsx from "clsx";
+import { useBars } from "@/queries/graph";
+import moment from "moment";
+const TradingViewWidget = ({ symbol }) => {
   const chartContainerRef = useRef(null);
+  const [currentTimeFrame, setCurrentTimeFrame] = useState(
+    TIMEFRAMES?.[0]?.value
+  );
 
-  const exchangeName = useMemo(() => {
-    return exchangeList?.find((item) => item?.id == exchange)?.exchange;
-  }, [exchangeList, exchange]);
+  const { data: historicalData } = useBars({
+    symbol: String(symbol)?.replace("/", ""),
+    from: moment().subtract(10, "days").unix(),
+    to: moment().unix(),
+    resolution: String(currentTimeFrame)?.replace("m", "")?.replace("D", ""),
+  });
 
   const ohlcvData = useWatchOHLCV({
     symbol,
-    exchange: exchangeName || exchange || undefined,
+    timeframe: currentTimeFrame,
   });
+  const [graphDataArray, setGraphDataArray] = useState([]);
 
-  const data = useMemo(() => {
-    if (ohlcvData?.ohlcvData?.length < 1) {
-      return [];
-    }
-    return (
-      ohlcvData?.ohlcvData
-        ?.map((item) => {
-          const time = Math.floor(item[0] / 1000);
-          const open = item[1];
-          const high = item[2];
-          const low = item[3];
-          const close = item[4];
-          return { time, open, high, low, close };
-        })
-        .sort((a, b) => new Date(a.time) - new Date(b.time)) || []
-    );
-  }, [ohlcvData]);
+  // 1️⃣ Load historical data once
+  useEffect(() => {
+    if (!historicalData || historicalData.length === 0) return;
+
+    setGraphDataArray(historicalData.sort((a, b) => a.time - b.time));
+  }, [historicalData]);
+
+  // 2️⃣ Append live WebSocket data
+  useEffect(() => {
+    if (!ohlcvData?.data) return;
+
+    setGraphDataArray((prev) => {
+      // prevent duplicate times
+      if (prev.some((c) => c.time === ohlcvData.data.time)) return prev;
+
+      return [...prev, ohlcvData.data].sort((a, b) => a.time - b.time);
+    });
+  }, [ohlcvData?.data]);
+  console.log(graphDataArray, "graphDataArray>>");
 
   return (
     <div ref={chartContainerRef} className="w-full h-[500px]">
+      <div className="flex items-end justify-end mb-6">
+        {TIMEFRAMES?.map((item, idx) => {
+          return (
+            <div
+              key={idx}
+              className={clsx(
+                "px-4 py-2  border border-gray-800/90 cursor-pointer",
+                item?.value == currentTimeFrame ? "bg-primary" : "bg-gray-900"
+              )}
+              onClick={() => {
+                setCurrentTimeFrame(item?.value);
+              }}
+            >
+              {item?.label}
+            </div>
+          );
+        })}
+      </div>
       {chartContainerRef?.current &&
       ohlcvData?.isConnected &&
-      data?.length > 1 ? (
+      graphDataArray?.length > 1 ? (
         <Chart
           options={{
+            timeScale: {
+              timeVisible: true,
+              secondsVisible: true,
+            },
             width: chartContainerRef?.current?.offsetWidth || 400,
             height: chartContainerRef?.current?.offsetHeight || 400,
             autoSize: true,
@@ -65,7 +96,7 @@ const TradingViewWidget = ({ symbol, exchange }) => {
           }}
         >
           <CandlestickSeries
-            data={data}
+            data={graphDataArray}
             upColor="#26a69a"
             downColor="#ef5350"
             borderVisible={false}

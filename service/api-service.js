@@ -13,10 +13,12 @@ export const DCAbaseUrl = "https://dca.qbots.trade/api"; // UAT
 // socket
 // export const wssBaseUrl = "ws://139.59.42.213:8082";  //local
 // export const wssBaseUrl = "wss://wsocket.qbots.trade/"; // UAT
-export const wssBaseUrl = "wss://socket-production.qbots.trade/"; // live
+export const wssBaseUrl = "wss://chartdata.qbots.trade"; // live
 
 export const gridBotBaseUrl = "https://spot-grid.qbots.trade/api";
 // export const gridBotBaseUrl = "http://64.227.185.157:3000/api";
+
+export const graphEndPoint = "https://chartdata.qbots.trade/tv/history";
 
 export const api = axios.create({
   baseURL: baseUrl,
