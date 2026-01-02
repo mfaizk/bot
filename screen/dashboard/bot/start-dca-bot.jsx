@@ -203,10 +203,10 @@ export default function StartDCABot() {
                   </div>
                 </div>
 
-                {/* Buy Amount per Entry (%) */}
+                {/* Buy Amount per Entry (% of Portfolio) */}
                 <div className="flex justify-between">
                   <div className="flex items-center gap-2 text-sm text-gray-400 mb-1">
-                    Buy Amount per Entry (%)
+                    Buy Amount per Entry (% of Portfolio)
                     <div className="relative group">
                       <Info
                         size={14}

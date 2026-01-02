@@ -273,7 +273,7 @@ export default function CreateDCABot() {
                     },
                     {
                       name: "perBuyPct",
-                      label: "Buy Amount per Entry (%)",
+                      label: "Buy Amount per Entry (% of Portfolio)",
                       tooltipInfo:
                         "Percentage of the Portfolio Size the bot should attempt to spend on each DCA buy.Example: 5% means each planned buy equals 5% of the Portfolio Size.",
                       placeholder: "e.g. 5",
