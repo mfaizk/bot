@@ -57,7 +57,7 @@ export default function PricingHero() {
       durationYearly: "1 Year",
       bottomYearly: "Pay with QIE: $250/year",
 
-      exchanges: ["BINANCE", "BYBIT"],
+      exchanges: ["Mexc", "BYBIT"],
       access: "Access to all bots",
       profitCap: "Unlimited",
       support1: "Priority server resources",
@@ -125,15 +125,15 @@ export default function PricingHero() {
           </div>
 
           <p className="mt-8 max-w-2xl text-gray-300 text-center lg:text-left">
-            Automate trades on Binance & Bybit — single API-only connections.
+            Automate trades on Mexc & Bybit — single API-only connections.
             Your funds remain on the exchange.
           </p>
 
           <div className="mt-4 sm:mt-10 flex flex-wrap items-center gap-4 sm:gap-6 justify-center lg:justify-start">
-            <ExchangeBadge name="BINANCE" accent="yellow" active />
+            {/* <ExchangeBadge name="BINANCE" accent="yellow" active /> */}
             <ExchangeBadge name="BYBIT" accent="gold" active />
-            <ExchangeBadge name="KUCOIN" accent="gray" comingSoon />
-            <ExchangeBadge name="MEXC" accent="gray" comingSoon />
+            <ExchangeBadge name="MEXC" accent="gray" active />
+             <ExchangeBadge name="KUCOIN" accent="gray" comingSoon />
           </div>
 
           <div className="pt-2 sm:pt-12 text-sm text-gray-400 flex items-center gap-2 justify-center lg:justify-start">
@@ -301,10 +301,10 @@ function ExchangeBadge({
   comingSoon = false,
 }) {
   const logos = {
-    BINANCE: "/assets/homepage/binance.png",
+      MEXC: "/assets/homepage/mexc.png",
     BYBIT: "/assets/homepage/bybit.webp",
     KUCOIN: "/assets/homepage/kucoin.png",
-    MEXC: "/assets/homepage/mexc.png",
+
   };
   const isKucoin = name === "KUCOIN";
   const logoSize = isKucoin ? 100 : 40;

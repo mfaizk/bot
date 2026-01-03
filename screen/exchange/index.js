@@ -145,7 +145,7 @@ export default function Exchange() {
           </h1>
 
           <p className="mt-6 text-lg text-gray-300 max-w-3xl">
-            Automate trades on Binance & Bybit — simple API-only connections.
+            Automate trades on Mexc & Bybit — simple API-only connections.
             Your funds remain on the exchange.
           </p>
 
@@ -184,7 +184,7 @@ export default function Exchange() {
           <div className="mt-16">
             <h2 className="text-3xl font-semibold">How Does It Work?</h2>
             <p className="mt-4 text-gray-300 max-w-3xl">
-              Connect Binance or Bybit using API keys (no withdrawal permissions
+              Connect Mexc or Bybit using API keys (no withdrawal permissions
               required).
             </p>
           </div>
@@ -192,17 +192,17 @@ export default function Exchange() {
 
         {/* RIGHT: Neon ring + badges */}
         <div className="col-span-12 lg:col-span-5 flex justify-center  lg:justify-center items-start lg:items-center gap-20 order-2 h-[100%]">
-          {/* Binance block */}
+          {/* Mexc block */}
           <div className="flex flex-col items-center justify-center gap-3">
             <div className="p-1.5 rounded-md bg-[#0d1726] border border-white/6 w-[80px] h-[80px] flex items-center justify-center">
               <img
-                src="././../assets/homepage/binance.png"
-                alt="Binance"
+                src="././../assets/homepage/mexc.png"
+                alt="Mexc"
                 className="max-w-[60px] w-full h-auto object-contain"
               />
             </div>
             <p className="text-md text-gray-300 font-bold text-center">
-              Binance
+              Mexc
             </p>
           </div>
 
@@ -224,7 +224,7 @@ export default function Exchange() {
         <FeatureCard
           icon={<PlusIcon />}
           title="Add Exchange"
-          description="Connect Binance or Bybit using API keys (no withdrawal permissions)."
+          description="Connect Mexc or Bybit using API keys (no withdrawal permissions)."
         />
         <FeatureCard
           icon={<BotIcon />}

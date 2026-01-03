@@ -37,7 +37,7 @@ const Section1 = () => {
         <p className="mt-6 text-sm sm:text-base md:text-lg text-gray-200  text-center">
         Qbots provides proven automated trading strategies designed for consistent performance and risk management.
 Our Grid and DCA (Dollar-Cost Averaging) strategies are built for both beginners and experienced traders, helping you trade efficiently without constant monitoring.
-All trades run securely through API connections on Bybit and Binance — ensuring your funds stay safe while Qbots does the work.
+All trades run securely through API connections on Bybit and Mexc — ensuring your funds stay safe while Qbots does the work.
         </p>
       </div> */}
 
@@ -75,7 +75,7 @@ All trades run securely through API connections on Bybit and Binance — ensurin
                 🔗 Connect Your Exchange APIs
               </h3>
               <p className="mt-2 text-gray-400 text-sm sm:text-base">
-                Link your preferred exchanges — Binance or Bybit —
+                Link your preferred exchanges — Mexc or Bybit —
                 securely and select your desired trading strategy.
               </p>
             </div>

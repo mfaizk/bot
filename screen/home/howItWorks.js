@@ -8,7 +8,7 @@ export default function HowItWorks() {
       number: "01",
       title: "Add Exchange",
       description:
-        "Securely connect your Binance or Bybit account using API keys. Your funds always stay on your exchange.",
+        "Securely connect your Mexc or Bybit account using API keys. Your funds always stay on your exchange.",
       icon: <Key className="w-10 h-10 text-primary" />,
     },
     {

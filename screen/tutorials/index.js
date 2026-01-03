@@ -34,11 +34,11 @@ const Tutorials = () => {
         </div>
 
         <h2 className="text-white text-xl md:text-2xl font-semibold mb-4">
-          How to Connect Binance with Qbots?
+          How to Connect Mexc with Qbots?
         </h2>
 
         <p className="text-gray-400 text-sm md:text-base leading-relaxed">
-          Learn how to generate an API key within Binance and securely link it
+          Learn how to generate an API key within Mexc and securely link it
           to Qbots for automated and seamless trading.
         </p>
       </div>
@@ -48,7 +48,7 @@ const Tutorials = () => {
           <div className="relative w-full max-w-2xl max-h-[90vh] overflow-hidden rounded-lg shadow-lg bg-gray-700 flex flex-col">
             <div className="sticky top-0 z-10 flex items-center justify-between p-4 md:p-5 border-b border-gray-600 bg-gray-700 rounded-t">
               <h3 className="text-xl font-semibold text-white">
-                Creating a New API Key in Binance & Whitelisting IP address
+                Creating a New API Key in Mexc & Whitelisting IP address
               </h3>
               <button
                 onClick={closeModal}
@@ -78,17 +78,17 @@ const Tutorials = () => {
                   <div className="flex items-center space-x-4">
                     <span className="text-2xl">🪄</span>
                     <h2 className="text-xl font-semibold text-white">
-                      Step 1: Log In to Your Binance Account
+                      Step 1: Log In to Your Mexc Account
                     </h2>
                   </div>
                   <ul className="mt-4 list-disc list-inside text-gray-300 space-y-2">
                     <li>
                       Go to{" "}
                       <a
-                        href="https://www.binance.com"
+                        href="https://www.mexc.co/en-IN/"
                         className="text-blue-400 underline"
                       >
-                        Binance
+                        Mexc
                       </a>{" "}
                       and log in using your credentials.
                     </li>
