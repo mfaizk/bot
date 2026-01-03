@@ -96,9 +96,19 @@ export default function CreateDCABot() {
   const { data: exchangeList, isPending: exchangeListPending } =
     useGetKeysExchange();
 
-  const exchangeName = useMemo(() => {
-    return exchangeList?.find((item) => item?.id == selectedExchange)?.exchange;
-  }, [exchangeList, selectedExchange]);
+ const exchangeName = useMemo(() => {
+  const found = exchangeList?.find(
+    (item) => item?.id == selectedExchange
+  );
+
+  console.log("useMemo exchange debug:", {
+    selectedExchange,
+    foundItem: found,
+    exchangeName: found?.exchange,
+  });
+
+  return found?.exchange;
+}, [exchangeList, selectedExchange]);
 
   const { data: pairData, isPending: pairDataPending } = useGetSymbolList({
     exchange: exchangeName,
@@ -221,7 +231,7 @@ export default function CreateDCABot() {
                     options={exchangeList?.map((item) => {
                       return {
                         label: item?.exchange,
-                        value: item?.exchange,
+                        value: item?.id,
                         icon: item?.icon,
                       };
                     })}

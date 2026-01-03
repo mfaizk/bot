@@ -265,24 +265,28 @@ export const createDCABots = async ({
   pair,
   exchangeName,
 }) => {
+ const payload = {
+    pair,
+    config: {
+      portfolioUsd,
+      perBuyPct,
+      maxEntries,
+      takeProfitPct,
+      stopLossPct,
+      minOrderUsd,
+      maxAllocPct,
+      enableIndicators,
+      exchangeName,
+    },
+  };
+
+  console.log("Create DCA Bot payload:", payload);
+
   try {
     const response = await api({
       method: "POST",
       url: `${DCAbaseUrl}/bots`,
-      data: {
-        pair: pair,
-        config: {
-          portfolioUsd,
-          perBuyPct,
-          maxEntries,
-          takeProfitPct,
-          stopLossPct,
-          minOrderUsd,
-          maxAllocPct,
-          enableIndicators,
-          exchangeName,
-        },
-      },
+      data: payload,
     });
 
     return response?.data;
@@ -291,7 +295,6 @@ export const createDCABots = async ({
     throw error;
   }
 };
-
 export const useGetDCABot = ({ id }) => {
   return useQuery({
     queryKey: ["getDCABot", id],
