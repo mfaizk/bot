@@ -12,6 +12,7 @@ const GridBotLogs = ({ botId }) => {
   } = useGetLogList({
     id: botId,
   });
+  console.log(orderList, "orderList>");
 
   return (
     <div>
@@ -40,7 +41,7 @@ const GridBotLogs = ({ botId }) => {
                 {/* <th className="px-2 py-2 text-white">Source</th> */}
                 <th className="px-2 py-2 text-white">Message</th>
                 <th className="px-2 py-2 text-white">Time</th>
-                <th className="px-2 py-2 text-white">BotInstanceId</th>
+                <th className="px-2 py-2 text-white">Error</th>
               </tr>
             </thead>
             <tbody>
@@ -57,7 +58,7 @@ const GridBotLogs = ({ botId }) => {
                       {moment(item?.updatedAt).format("YYYY.MM.DD HH:mm:ss") ||
                         "--"}
                     </td>
-                    <td className="px-2 py-2">{item?.botId || "--"}</td>
+                    <td className="px-2 py-2">{item?.meta?.error || "--"}</td>
                   </tr>
                 );
               })}
