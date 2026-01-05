@@ -40,8 +40,8 @@ const GridBotLogs = ({ botId }) => {
                 <th className="px-2 py-2 text-white">Level</th>
                 {/* <th className="px-2 py-2 text-white">Source</th> */}
                 <th className="px-2 py-2 text-white">Message</th>
-                <th className="px-2 py-2 text-white">Time</th>
                 <th className="px-2 py-2 text-white">Error</th>
+                <th className="px-2 py-2 text-white">Time</th>
               </tr>
             </thead>
             <tbody>
@@ -54,11 +54,11 @@ const GridBotLogs = ({ botId }) => {
                     <td className="px-2 py-2">{item?.level || "--"}</td>
                     {/* <td className="px-2 py-2">{item?.source || "--"}</td> */}
                     <td className="px-2 py-2">{item?.message || "--"}</td>
+                    <td className="px-2 py-2">{item?.meta?.error || "--"}</td>
                     <td className="px-2 py-2">
                       {moment(item?.updatedAt).format("YYYY.MM.DD HH:mm:ss") ||
                         "--"}
                     </td>
-                    <td className="px-2 py-2">{item?.meta?.error || "--"}</td>
                   </tr>
                 );
               })}
