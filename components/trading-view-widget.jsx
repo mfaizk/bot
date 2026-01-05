@@ -61,6 +61,9 @@ const TradingViewWidget = ({ symbol }) => {
                 item?.value == currentTimeFrame ? "bg-primary" : "bg-gray-900"
               )}
               onClick={() => {
+                if (item?.value == currentTimeFrame) {
+                  return;
+                }
                 if (!historicalDataLoading) {
                   setGraphDataArray([]);
                   setCurrentTimeFrame(item?.value);
