@@ -40,7 +40,7 @@ export default function HomeTab() {
           </li>
           <li className="flex items-center gap-3 text-gray-300">
             <CheckCircle className="text-primary" size={20} /> 
-            Exchanges: Binance
+            Exchanges: Mexc
           </li>
           <li className="flex items-center gap-3 text-gray-300">
             <CheckCircle className="text-primary" size={20} /> 
@@ -49,7 +49,7 @@ export default function HomeTab() {
         </ul>
 
         <div className="border-t border-gray-700 pt-4 text-sm text-gray-400 mb-6">
-          Expand arbitrage on Binance. Higher profit potential with advanced automated trading. Limited-time offer!
+          Expand arbitrage on Mexc. Higher profit potential with advanced automated trading. Limited-time offer!
         </div>
 
       <div className=" w-full flex justify-center items-center">

@@ -122,7 +122,7 @@ export default function ActiveTrade() {
     ];
 
     const exchangeOptions = [
-      { label: "Binance", value: "binance", icon: "/assets/homepage/binance.png" },
+      { label: "Mexc", value: "mexc", icon: "/assets/homepage/mexc.png" },
       { label: "Bybit", value: "bybit", icon: "/assets/homepage/bybit.webp" },
     ];
 

@@ -238,8 +238,8 @@ export default function Footer() {
               <div className="flex gap-3 items-center">
                 <div className="p-1.5 sm:p-1.5 md:p-2 rounded-md bg-[#0d1726] border border-white/6 w-12 h-12 sm:w-12 sm:h-12 flex items-center justify-center">
                   <img
-                    src="././../assets/homepage/binance.png"
-                    alt="Binance"
+                    src="././../assets/homepage/mexc.png"
+                    alt="Mexc"
                     className="w-12 h-12 object-contain"
                   />
                 </div>

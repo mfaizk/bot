@@ -68,15 +68,15 @@ export default function SupportsExchanges() {
             </g>
           </svg>
 
-          {/* Left exchange node (Binance) - absolute positioned relative to container */}
+          {/* Left exchange node (Mexc) - absolute positioned relative to container */}
           <div
             className="absolute left-[5%] sm:left-[15%] top-[58%] transform -translate-y-1/2 w-40 flex flex-col items-center"
             style={{ pointerEvents: "auto" }}
           >
             <div className="w-20 h-20 rounded-full bg-[#0b1229] flex items-center justify-center border border-white/8 shadow-[0_10px_30px_rgba(20,120,255,0.06)]">
-              <img src="././../assets/homepage/binance.png" alt="Binance" className="w-12 h-12 object-contain"/>
+              <img src="././../assets/homepage/mexc.png" alt="Mexc" className="w-12 h-12 object-contain"/>
             </div>
-            <div className="mt-3 text-white font-semibold text-lg">Binance</div>
+            <div className="mt-3 text-white font-semibold text-lg">Mexc</div>
           </div>
 
           {/* Right exchange node (Bybit) */}

@@ -42,7 +42,7 @@ export default function HeroSection() {
           </h1>
 
           <p className="text-gray-400 text-lg max-w-lg mx-auto lg:mx-0">
-            Automate trades on Binance & Bybit — minimal setup, continuous
+            Automate trades on Mexc & Bybit — minimal setup, continuous
             optimization.
           </p>
 
@@ -72,7 +72,7 @@ export default function HeroSection() {
             <div className="pt-6 space-y-3 text-gray-300 flex-col justify-center">
               <Feature text="Trusted by 15k traders" />
               <Feature text="24/7 uptime" />
-              <Feature text="Funds stay on Binance & Bybit" />
+              <Feature text="Funds stay on Mexc & Bybit" />
             </div>
           </div>
 

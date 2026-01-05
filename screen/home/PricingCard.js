@@ -93,7 +93,7 @@ export default function PricingCard() {
                 <li className="flex items-start gap-3">
                   <CheckMark />
                   <div>
-                    <div className="text-sm font-semibold">Exchanges: Binance , Bybit</div>
+                    <div className="text-sm font-semibold">Exchanges: Mexc , Bybit</div>
                   </div>
                 </li>
 
@@ -107,7 +107,7 @@ export default function PricingCard() {
 
               {/* small description */}
               <p className="mt-6 text-gray-400 text-sm leading-relaxed">
-                Explore grid & DCA on Binance & Bybit. Higher price programmatically automated and monitored.
+                Explore grid & DCA on Mexc & Bybit. Higher price programmatically automated and monitored.
               </p>
 
               {/* CTA */}
