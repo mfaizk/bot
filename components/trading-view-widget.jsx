@@ -17,7 +17,7 @@ const TradingViewWidget = ({ symbol }) => {
     TIMEFRAMES?.[0]?.value
   );
 
-  const { data: historicalData } = useBars({
+  const { data: historicalData, isLoading: historicalDataLoading } = useBars({
     symbol: String(symbol)?.replace("/", ""),
     from: moment().subtract(10, "days").unix(),
     to: moment().unix(),
@@ -30,21 +30,21 @@ const TradingViewWidget = ({ symbol }) => {
   });
   const [graphDataArray, setGraphDataArray] = useState([]);
 
-  // 1️⃣ Load historical data once
+  useEffect(() => {
+    if (symbol) {
+      setGraphDataArray([]);
+    }
+  }, [symbol]);
+
   useEffect(() => {
     if (!historicalData || historicalData.length === 0) return;
-
     setGraphDataArray(historicalData.sort((a, b) => a.time - b.time));
   }, [historicalData]);
 
-  // 2️⃣ Append live WebSocket data
   useEffect(() => {
     if (!ohlcvData?.data) return;
-
     setGraphDataArray((prev) => {
-      // prevent duplicate times
       if (prev.some((c) => c.time === ohlcvData.data.time)) return prev;
-
       return [...prev, ohlcvData.data].sort((a, b) => a.time - b.time);
     });
   }, [ohlcvData?.data]);
@@ -61,7 +61,13 @@ const TradingViewWidget = ({ symbol }) => {
                 item?.value == currentTimeFrame ? "bg-primary" : "bg-gray-900"
               )}
               onClick={() => {
-                setCurrentTimeFrame(item?.value);
+                if (item?.value == currentTimeFrame) {
+                  return;
+                }
+                if (!historicalDataLoading) {
+                  setGraphDataArray([]);
+                  setCurrentTimeFrame(item?.value);
+                }
               }}
             >
               {item?.label}
@@ -70,7 +76,7 @@ const TradingViewWidget = ({ symbol }) => {
         })}
       </div>
       {chartContainerRef?.current &&
-      ohlcvData?.isConnected &&
+      !historicalDataLoading &&
       graphDataArray?.length > 1 ? (
         <Chart
           options={{

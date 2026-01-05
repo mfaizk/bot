@@ -39,13 +39,13 @@ export default function CurrentPlan({ activeSubs }) {
   return (
     <div className="bg-[#12121a] border border-gray-800/50 rounded-2xl p-6">
       <div className="flex items-center justify-between mb-8">
-        <h3 className="text-white text-lg font-normal">
+        <h3 className="text-gray-400 hover:text-white hover:bg-gray-800/50">
           {activeSubs?.planName
             ? `${activeSubs?.planName} Plan`
             : `Current Plan`}
         </h3>
         <button
-          className="text-gray-400 hover:text-white hover:bg-gray-800/50"
+          className="text-white text-lg font-normal"
           onClick={() => {
             router.push("/dashboard/pricing");
           }}

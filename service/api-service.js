@@ -4,19 +4,16 @@ import { deleteCookie, getCookie } from "cookies-next";
 import React from "react";
 import { toast } from "sonner";
 
-// export const baseUrl = "http://139.59.42.213:8080/api/v1"; // local
 // export const baseUrl = "https://backend.qbots.trade/api/v1"; // UAT
 export const baseUrl = "https://productionb.qbots.trade/api/v1"; // live
 
 export const DCAbaseUrl = "https://dca.qbots.trade/api"; // UAT
 
 // socket
-// export const wssBaseUrl = "ws://139.59.42.213:8082";  //local
 // export const wssBaseUrl = "wss://wsocket.qbots.trade/"; // UAT
 export const wssBaseUrl = "wss://chartdata.qbots.trade"; // live
 
 export const gridBotBaseUrl = "https://spot-grid.qbots.trade/api";
-// export const gridBotBaseUrl = "http://64.227.185.157:3000/api";
 
 export const graphEndPoint = "https://chartdata.qbots.trade/tv/history";
 

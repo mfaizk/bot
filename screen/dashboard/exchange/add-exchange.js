@@ -176,7 +176,7 @@ export default function AddExchange() {
 
   const handleSelect = (val) => {
     if (exchangeKeyList?.find((item) => item?.exchange == val)) {
-      toast.error("Please Delete exchnage credential before proceeding");
+      toast.error("Please Delete exchange credential before proccesing");
       return;
     }
     setFormData({ ...formData, exchange: val });

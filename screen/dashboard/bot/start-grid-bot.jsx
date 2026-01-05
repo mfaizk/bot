@@ -17,10 +17,12 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { IconTrashXFilled } from "@tabler/icons-react";
 import {
+  Delete,
   EditIcon,
   FileWarning,
   Info,
   RefreshCcw,
+  Trash,
   TriangleAlert,
 } from "lucide-react";
 import Modal from "@/components/ui/modal";
@@ -350,29 +352,40 @@ export default function StartGridBot() {
                   </div>
                 </div>
 
-                <button
-                  className="w-full mt-2 py-3 rounded-xl text-white font-semibold bg-pink-600 hover:bg-pink-700 transition-all"
-                  onClick={() => {
-                    if (botData?.status == "RUNNING") {
-                      setCurrentSelectedItem(null);
-                      setDeleteModalState(true);
-                    } else {
-                      updateBotStatusMutate();
-                    }
-                  }}
-                  disabled={updatebotStatusPending}
-                >
-                  {updatebotStatusPending ? (
-                    "Processing..."
-                  ) : (
-                    <>
-                      {botData?.status == "RUNNING"
-                        ? "Liquidate/Delete "
-                        : "Start"}{" "}
-                      Bot
-                    </>
+                <div className="flex items-center justify-center gap-4">
+                  <button
+                    className="w-full mt-2 py-3 rounded-xl text-white font-semibold bg-pink-600 hover:bg-pink-700 transition-all"
+                    onClick={() => {
+                      if (botData?.status == "RUNNING") {
+                        setCurrentSelectedItem(null);
+                        setDeleteModalState(true);
+                      } else {
+                        updateBotStatusMutate();
+                      }
+                    }}
+                    disabled={updatebotStatusPending}
+                  >
+                    {updatebotStatusPending ? (
+                      "Processing..."
+                    ) : (
+                      <>
+                        {botData?.status == "RUNNING"
+                          ? "Liquidate/Delete "
+                          : "Start"}{" "}
+                        Bot
+                      </>
+                    )}
+                  </button>
+                  {botData?.enableIndicators && (
+                    <Trash
+                      className="text-red-500"
+                      onClick={() => {
+                        setCurrentSelectedItem(null);
+                        setDeleteModalState(true);
+                      }}
+                    />
                   )}
-                </button>
+                </div>
                 <div className="flex flex-col md:flex-row  justify-between gap-4">
                   <p className="text-md text-gray-400">
                     Realized P&L:{" "}

@@ -9,7 +9,6 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { GoogleLogin } from "@react-oauth/google";
 import { setCookie } from "cookies-next";
-console.log(process.env.NEXT_PUBLIC_client_id, "env>>");
 
 const Login = () => {
   const router = useRouter();
@@ -34,7 +33,6 @@ const Login = () => {
           router.push(
             `/ad-otp-screen?email=${encodeURIComponent(formData.email)}`
           );
-          
           // toast.success(data?.data?.responseMessage);
           // setCookie("token", data?.data?.result?.token);
           // setCookie("userType", "admin");
@@ -45,8 +43,6 @@ const Login = () => {
             `/login-otp-screen?email=${encodeURIComponent(formData.email)}`
           );
         }
-      } else {
-        toast.error(data?.data?.responseMessage);
       }
     },
     onError: (err) => {
@@ -213,7 +209,6 @@ const Login = () => {
                 useOneTap
               />
             </div>
-            
           </form>
         </div>
       </div>
