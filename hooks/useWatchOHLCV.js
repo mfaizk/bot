@@ -46,9 +46,16 @@ export const useWatchOHLCV = ({ symbol = "BTCUSDT", timeframe = "1m" }) => {
       }
     };
 
-    ws.onclose = () => setIsConnected(false);
-    ws.onerror = (e) => console.error("❌ WSS error", e);
-
+    // ws.onclose = () => setIsConnected(false);
+    ws.onclose = () => {
+  setIsConnected(false);
+};
+    // ws.onerror = (e) => console.error("❌ WSS error", e);
+ws.onerror = () => {
+  // Browser gives empty error object for WS failures
+  // This is normal during reconnects / strict mode
+  console.warn("WS connection issue (non-fatal)");
+};
     return () => ws.close();
   }, [symbol, timeframe]);
 

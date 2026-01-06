@@ -1,122 +1,253 @@
 "use client";
+
 import {
   Chart,
   CandlestickSeries,
+  HistogramSeries,
   TimeScale,
   TimeScaleFitContentTrigger,
 } from "lightweight-charts-react-components";
 import ActivityIndicator from "@/components/activity-indicator";
 import { TIMEFRAMES, useWatchOHLCV } from "@/hooks/useWatchOHLCV";
-import { memo, useEffect, useMemo, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import { useBars } from "@/queries/graph";
 import moment from "moment";
-const TradingViewWidget = ({ symbol }) => {
-  const chartContainerRef = useRef(null);
+
+/**
+ * UI timeframe → backend resolution
+ */
+const RESOLUTION_MAP = {
+  "1m": "1",
+  "5m": "5",
+  "15m": "15",
+  "60m": "60",
+  "1d": "1D",
+};
+
+/**
+ * Time range per timeframe (seconds)
+ */
+const RANGE_MAP = {
+  "1m": 2 * 24 * 60 * 60,
+  "5m": 7 * 24 * 60 * 60,
+  "15m": 14 * 24 * 60 * 60,
+  "60m": 30 * 24 * 60 * 60,
+  "1d": 180 * 24 * 60 * 60,
+};
+
+const TradingViewWidget = ({ symbol = "" }) => {
+  /** refs & state */
+  const containerRef = useRef(null);
+  const [width, setWidth] = useState(0);
+  const [mounted, setMounted] = useState(false);
   const [currentTimeFrame, setCurrentTimeFrame] = useState(
-    TIMEFRAMES?.[0]?.value
+    TIMEFRAMES[0].value
   );
 
-  const { data: historicalData, isLoading: historicalDataLoading } = useBars({
-    symbol: String(symbol)?.replace("/", ""),
-    from: moment().subtract(10, "days").unix(),
-    to: moment().unix(),
-    resolution: String(currentTimeFrame)?.replace("m", "")?.replace("D", ""),
+  /** safe symbol */
+  const safeSymbol = String(symbol || "").replace("/", "");
+
+  /** timeframe helpers */
+  const tfKey = currentTimeFrame.toLowerCase();
+  const resolution = RESOLUTION_MAP[tfKey];
+  const to = Math.floor(Date.now() / 1000);
+  const from = to - RANGE_MAP[tfKey];
+
+  /** REST bars */
+  const { data = [], isLoading } = useBars({
+    symbol: safeSymbol,
+    resolution,
+    from,
+    to,
   });
 
+  /** WebSocket OHLCV */
   const ohlcvData = useWatchOHLCV({
     symbol,
     timeframe: currentTimeFrame,
   });
-  const [graphDataArray, setGraphDataArray] = useState([]);
 
+  /** merged rows (single source of truth) */
+  const [rows, setRows] = useState([]);
+
+  /** mark mounted */
   useEffect(() => {
-    if (symbol) {
-      setGraphDataArray([]);
-    }
-  }, [symbol]);
+    setMounted(true);
+  }, []);
 
+  /** measure width */
   useEffect(() => {
-    if (!historicalData || historicalData.length === 0) return;
-    setGraphDataArray(historicalData.sort((a, b) => a.time - b.time));
-  }, [historicalData]);
+    if (!containerRef.current) return;
 
+    const resize = () => {
+      setWidth(containerRef.current?.offsetWidth || 0);
+    };
+
+    resize();
+    window.addEventListener("resize", resize);
+    return () => window.removeEventListener("resize", resize);
+  }, []);
+
+  /** load historical REST data */
+  useEffect(() => {
+    if (!data.length) return;
+
+    const formatted = data.map((c) => {
+      if (currentTimeFrame === "1D") {
+        const d = moment.unix(Number(c.time));
+        return {
+          time: {
+            year: d.year(),
+            month: d.month() + 1,
+            day: d.date(),
+          },
+          open: Number(c.open),
+          high: Number(c.high),
+          low: Number(c.low),
+          close: Number(c.close),
+          volume: Number(c.volume),
+        };
+      }
+
+      return {
+        time: Number(c.time),
+        open: Number(c.open),
+        high: Number(c.high),
+        low: Number(c.low),
+        close: Number(c.close),
+        volume: Number(c.volume),
+      };
+    });
+
+    setRows(formatted);
+  }, [data, currentTimeFrame]);
+
+  /** 🔴 realtime updates (1m only) */
   useEffect(() => {
     if (!ohlcvData?.data) return;
-    setGraphDataArray((prev) => {
-      if (prev.some((c) => c.time === ohlcvData.data.time)) return prev;
-      return [...prev, ohlcvData.data].sort((a, b) => a.time - b.time);
+    if (currentTimeFrame !== "1m") return;
+
+    setRows((prev) => {
+      if (!prev.length) return prev;
+
+      const last = prev[prev.length - 1];
+      const incoming = ohlcvData.data;
+
+      /** update current candle */
+      if (last.time === incoming.time) {
+        const updated = [...prev];
+        updated[updated.length - 1] = {
+          ...last,
+          high: Math.max(last.high, incoming.high),
+          low: Math.min(last.low, incoming.low),
+          close: incoming.close,
+          volume: (last.volume || 0) + (incoming.volume || 0),
+        };
+        return updated;
+      }
+
+      /** append new candle */
+      if (incoming.time > last.time) {
+        return [...prev, incoming];
+      }
+
+      return prev;
     });
-  }, [ohlcvData?.data]);
+  }, [ohlcvData?.data, currentTimeFrame]);
+
+  /** split series */
+  const candleData = rows.map(({ time, open, high, low, close }) => ({
+    time,
+    open,
+    high,
+    low,
+    close,
+  }));
+
+  const volumeData = rows.map(({ time, volume, open, close }) => ({
+    time,
+    value: volume,
+    color: close >= open ? "#26a69a" : "#ef5350",
+  }));
 
   return (
-    <div ref={chartContainerRef} className="w-full h-[500px]">
-      <div className="flex items-end justify-end mb-6">
-        {TIMEFRAMES?.map((item, idx) => {
-          return (
-            <div
-              key={idx}
-              className={clsx(
-                "px-4 py-2  border border-gray-800/90 cursor-pointer",
-                item?.value == currentTimeFrame ? "bg-primary" : "bg-gray-900"
-              )}
-              onClick={() => {
-                if (item?.value == currentTimeFrame) {
-                  return;
-                }
-                if (!historicalDataLoading) {
-                  setGraphDataArray([]);
-                  setCurrentTimeFrame(item?.value);
-                }
-              }}
-            >
-              {item?.label}
-            </div>
-          );
-        })}
+    <div ref={containerRef} className="w-full">
+      {/* timeframe buttons */}
+      <div className="flex justify-end mb-4">
+        {TIMEFRAMES.map((tf) => (
+          <button
+            key={tf.value}
+            onClick={() => setCurrentTimeFrame(tf.value)}
+            className={clsx(
+              "px-4 py-2 border border-gray-800",
+              tf.value === currentTimeFrame ? "bg-primary" : "bg-gray-900"
+            )}
+          >
+            {tf.label}
+          </button>
+        ))}
       </div>
-      {chartContainerRef?.current &&
-      !historicalDataLoading &&
-      graphDataArray?.length > 1 ? (
-        <Chart
-          options={{
-            timeScale: {
-              timeVisible: true,
-              secondsVisible: true,
-            },
-            width: chartContainerRef?.current?.offsetWidth || 400,
-            height: chartContainerRef?.current?.offsetHeight || 400,
-            autoSize: true,
-            layout: {
-              background: { type: "solid", color: "#0F0F0F" },
-              textColor: "#ffffff",
-            },
-            grid: {
-              vertLines: { color: "#2B2B2B" },
-              horzLines: { color: "#2B2B2B" },
-            },
-            crosshair: {
-              mode: 1,
-            },
-          }}
-        >
-          <CandlestickSeries
-            data={graphDataArray}
-            upColor="#26a69a"
-            downColor="#ef5350"
-            borderVisible={false}
-            wickUpColor="#26a69a"
-            wickDownColor="#ef5350"
-          />
-          <TimeScale>
-            <TimeScaleFitContentTrigger deps={[]} />
-          </TimeScale>
-        </Chart>
-      ) : (
-        <div className="h-[500px] w-full flex items-center justify-center flex-col">
-          <ActivityIndicator isLoading className={"h-14 w-14"} />
-          <p>Getting Chart Data...</p>
+
+      {!mounted || width === 0 || isLoading ? (
+        <div className="h-[500px] flex items-center justify-center">
+          <ActivityIndicator isLoading />
         </div>
+      ) : (
+        <>
+          {/* PRICE CHART */}
+          <Chart
+            options={{
+              width,
+              height: 360,
+              layout: {
+                background: { color: "#0F0F0F" },
+                textColor: "#ffffff",
+              },
+              grid: {
+                vertLines: { color: "#2B2B2B" },
+                horzLines: { color: "#2B2B2B" },
+              },
+            }}
+          >
+            <CandlestickSeries
+              data={candleData}
+              upColor="#26a69a"
+              downColor="#ef5350"
+              borderVisible={false}
+              wickUpColor="#26a69a"
+              wickDownColor="#ef5350"
+            />
+            <TimeScale>
+              <TimeScaleFitContentTrigger deps={[candleData.length]} />
+            </TimeScale>
+          </Chart>
+
+          {/* VOLUME CHART */}
+          <Chart
+            options={{
+              width,
+              height: 140,
+              layout: {
+                background: { color: "#0F0F0F" },
+                textColor: "#ffffff",
+              },
+              grid: {
+                vertLines: { color: "#2B2B2B" },
+                horzLines: { color: "#2B2B2B" },
+              },
+              timeScale: { visible: false },
+            }}
+          >
+            <HistogramSeries
+              data={volumeData}
+              priceFormat={{ type: "volume" }}
+            />
+            <TimeScale>
+              <TimeScaleFitContentTrigger deps={[volumeData.length]} />
+            </TimeScale>
+          </Chart>
+        </>
       )}
     </div>
   );
