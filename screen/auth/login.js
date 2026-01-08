@@ -165,16 +165,6 @@ const Login = () => {
               )}
             </div>
             <div className="flex items-center justify-between text-sm mb-6">
-              <label className="flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  name="remember"
-                  checked={formData.remember}
-                  onChange={handleChange}
-                  className="mr-2"
-                />
-                Remember me
-              </label>
               <Link
                 href="/forgot-screen"
                 className="text-primary hover:underline"

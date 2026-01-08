@@ -40,9 +40,10 @@ function BotStatsCards() {
     <button
       onClick={() => setActiveTab(id)}
       className={`px-4 py-2 text-sm font-medium rounded-lg transition
-        ${activeTab === id
-          ? "bg-primary text-white"
-          : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+        ${
+          activeTab === id
+            ? "bg-primary text-white"
+            : "bg-gray-100 text-gray-600 hover:bg-gray-200"
         }`}
     >
       {label}
@@ -60,7 +61,7 @@ function BotStatsCards() {
   );
 
   return (
-    <div className="w-full max-w-4xl mx-auto lg:h-56 ">
+    <div className="w-full max-w-4xl mx-auto lg:h-82 ">
       <p className="py-4 text-4xl">Statistics</p>
       <div className="flex gap-2 mb-6">
         <TabButton id="grid" label="Grid Bot" />
@@ -83,10 +84,11 @@ function BotStatsCards() {
           {gridStats?.mostProfitableBot && (
             <StatCard
               label="Top Bot Profit"
-              value={`${gridStats?.mostProfitableBot?.symbol
-                } • $${formatCurrency(
-                  gridStats?.mostProfitableBot?.profit || 0
-                )}`}
+              value={`${
+                gridStats?.mostProfitableBot?.symbol
+              } • $${formatCurrency(
+                gridStats?.mostProfitableBot?.profit || 0
+              )}`}
               highlight
             />
           )}
