@@ -83,7 +83,7 @@ export default function CreateGridBot() {
       gridUpper: "",
       investment: 10,
       gridCount: 6,
-      orderSize: 2,
+      orderSize: 6,
       enableIndicators: false,
       stopLossPrice: "",
     },
@@ -266,7 +266,7 @@ export default function CreateGridBot() {
                       label: "Order Size",
                       tooltipInfo:
                         "This specifies the amount used for each individual buy order placed by the bot. Every grid buy uses this fixed quantity. Smaller order sizes result in more granular trades, while larger sizes increase exposure per trade. This value must be compatible with the exchange’s minimum order requirements.",
-                      placeholder: "10",
+                      placeholder: "6",
                     },
                     {
                       name: "gridCount",
