@@ -9,6 +9,14 @@ const Percentage = 100;
 
 export default function CurrentPlan({ activeSubs }) {
   const router = useRouter();
+  const { data: profileData, isLoading: profileDdataLoading } =
+    useUserProfile();
+
+  const isPlanActive = useMemo(() => {
+    return !!profileData?.subscriptionDetail?.find(
+      (item) => item?.planStatus != "EXPIRED"
+    );
+  }, [profileData]);
 
   const profitCaptrimValue = useMemo(() => {
     const result = activeSubs?.permission?.find((item) =>
@@ -72,9 +80,11 @@ export default function CurrentPlan({ activeSubs }) {
           <div className="absolute inset-0 flex flex-col items-center justify-center">
             <div className="text-xl font-semibold text-white">
               {/* {activeSubs?.duration == 7 ? "Unlimited" : profitCaptrimValue} */}
-              Unlimited
+              {isPlanActive ? `Unlimited` : `No Plan`}
             </div>
-            <div className="text-sm text-gray-400 mt-1">Available Cap</div>
+            <div className="text-sm text-gray-400 mt-1">
+              {isPlanActive ? `Available Cap` : "Active"}
+            </div>
           </div>
         </div>
         {/* {activeSubs?.amount  && ( */}
