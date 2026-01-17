@@ -210,36 +210,69 @@ export default function DCAStats() {
         )}
       </div>
 
-      {/* PIE CHART */}
-      <div className="bg-[#12121a] border border-gray-800/50 rounded-2xl p-6">
-        <h2 className="text-lg font-semibold text-white mb-4">
-          Bots by Exchange
-        </h2>
-        <div className="h-[300px]">
-          {loadingEx ? (
-            <div className="h-full animate-pulse bg-gray-800/40 rounded-xl" />
-          ) : (
-            <ResponsiveContainer width="100%" height={350}>
-              <PieChart>
-                <Pie
-                  data={exchangeStats ?? []}
-                  dataKey={(d) => Number(d.total_bots ?? 0)}
-                  nameKey="exchange"
-                  outerRadius={120}
-                  label
-                >
-                  {(exchangeStats ?? []).map((entry, idx) => (
-                    <Cell
-                      key={`cell-${idx}`}
-                      fill={COLORS[idx % COLORS.length]}
-                    />
-                  ))}
-                </Pie>
-                <Tooltip />
-                <Legend />
-              </PieChart>
-            </ResponsiveContainer>
-          )}
+      <div className="grid grid-cols-6  md:grid-cols-12 gap-6">
+        <div className="bg-[#12121a] col-span-6 border border-gray-800/50 rounded-2xl p-6">
+          <h2 className="text-lg font-semibold text-white mb-4">
+            Bots by Exchange
+          </h2>
+          <div className="h-[300px]">
+            {loadingEx ? (
+              <div className="h-full animate-pulse bg-gray-800/40 rounded-xl" />
+            ) : (
+              <ResponsiveContainer width="100%" height={350}>
+                <PieChart>
+                  <Pie
+                    data={exchangeStats ?? []}
+                    dataKey={(d) => Number(d.total_bots ?? 0)}
+                    nameKey="exchange"
+                    outerRadius={120}
+                    label
+                  >
+                    {(exchangeStats ?? []).map((entry, idx) => (
+                      <Cell
+                        key={`cell-${idx}`}
+                        fill={COLORS[idx % COLORS.length]}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            )}
+          </div>
+        </div>
+
+        <div className="bg-[#12121a] col-span-6 border border-gray-800/50 rounded-2xl p-6">
+          <h2 className="text-lg font-semibold text-white mb-4">
+            Running Bots by Exchange
+          </h2>
+          <div className="h-[300px]">
+            {loadingEx ? (
+              <div className="h-full animate-pulse bg-gray-800/40 rounded-xl" />
+            ) : (
+              <ResponsiveContainer width="100%" height={350}>
+                <PieChart>
+                  <Pie
+                    data={exchangeStats ?? []}
+                    dataKey={(d) => Number(d.running_bots ?? 0)}
+                    nameKey="exchange"
+                    outerRadius={120}
+                    label
+                  >
+                    {(exchangeStats ?? []).map((entry, idx) => (
+                      <Cell
+                        key={`cell-running-${idx}`}
+                        fill={COLORS[idx % COLORS.length]}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            )}
+          </div>
         </div>
       </div>
     </div>
