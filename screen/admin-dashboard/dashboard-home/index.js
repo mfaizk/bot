@@ -95,25 +95,25 @@ export default function Dashboard() {
     <div className="min-h-screen text-white px-4 md:px-6 py-6">
       <div className="max-w-screen-2xl mx-auto">
         {/* ===== STAT CARDS ===== */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-10">
           <StatCard
             title="Exchange"
             value={dashboardCount?.exchangeConnectedCount}
             subtitle="Connected Exchange"
             icon={ArrowLeftRight}
           />
-          <StatCard
+          {/* <StatCard
             title="Transactions"
             value={dashboardCount?.transactionCount}
             subtitle="Transactions"
             icon={Receipt}
-          />
-          <StatCard
+          /> */}
+          {/* <StatCard
             title="Total Bots"
             value={dashboardCount?.noOfBot}
             subtitle="Total Bots"
             icon={TrendingUp}
-          />
+          /> */}
           <StatCard
             title="Users"
             value={dashboardCount?.userCounts}

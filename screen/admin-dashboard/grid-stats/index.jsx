@@ -135,12 +135,12 @@ export default function GridStats() {
             />
             <StatCard title="Total Bots" value={stats?.total_bots} icon={Bot} />
             <StatCard
-              title="Running Bots"
+              title="Active Bots"
               value={stats?.running_bots}
               icon={Play}
             />
             <StatCard
-              title="Total Trades"
+              title="Completed Trades"
               value={stats?.total_trades}
               icon={BarChart2}
             />
@@ -157,15 +157,15 @@ export default function GridStats() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-300">
             <div>
-              <span className="text-gray-500">Uptime:</span>{" "}
+              <span className="text-gray-500">Service Uptime:</span>{" "}
               {health?.uptime_seconds?.toFixed?.(1)} sec
             </div>
             <div>
-              <span className="text-gray-500">Memory:</span> {health?.memory_mb}{" "}
-              MB
+              <span className="text-gray-500">Memory Usage:</span>{" "}
+              {health?.memory_mb} MB
             </div>
             <div>
-              <span className="text-gray-500">Timestamp:</span>{" "}
+              <span className="text-gray-500">Last Updated:</span>{" "}
               {moment(health?.timestamp).format("lll")}
             </div>
           </div>
@@ -176,7 +176,7 @@ export default function GridStats() {
       <div className="grid grid-cols-6  md:grid-cols-12 gap-6">
         <div className="bg-[#12121a] col-span-6 border border-gray-800/50 rounded-2xl p-6">
           <h2 className="text-lg font-semibold text-white mb-4">
-            Bots by Exchange
+            Total Bots by Exchange
           </h2>
           <div className="h-[300px]">
             {loadingEx ? (
@@ -208,7 +208,7 @@ export default function GridStats() {
 
         <div className="bg-[#12121a] col-span-6 border border-gray-800/50 rounded-2xl p-6">
           <h2 className="text-lg font-semibold text-white mb-4">
-            Running Bots by Exchange
+            Active Bots by Exchange
           </h2>
           <div className="h-[300px]">
             {loadingEx ? (
