@@ -157,10 +157,31 @@ export default function Dashboard() {
           <ResponsiveContainer width="100%" height={330}>
             <LineChart data={userAnalytics?.chartData ?? []}>
               <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
-              <XAxis dataKey="date" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
+
+              <XAxis
+                dataKey="date"
+                tickFormatter={(value) => moment(value).format("DD MMM YYYY")} // format
+                angle={-35}
+                textAnchor="end"
+                height={60}
+                style={{ fontSize: 12, fill: "#6B7280", fontWeight: 500 }} // styling
+              />
+
+              <YAxis
+                tickFormatter={(v) => v.toLocaleString()} // optional formatting (1,000, 12,300 etc)
+                angle={-45}
+                textAnchor="end"
+                width={70}
+                style={{ fontSize: 12, fill: "#6B7280", fontWeight: 500 }} // styling
+              />
+
+              <Tooltip
+                labelFormatter={(value) => moment(value).format("DD MMM YYYY")}
+                formatter={(v) => v.toLocaleString()}
+              />
+
+              {/* <Legend /> */}
+
               <Line
                 type="monotone"
                 dataKey="userCount"
@@ -225,7 +246,7 @@ export default function Dashboard() {
               />
               <YAxis />
               <Tooltip />
-              <Legend />
+              {/* <Legend /> */}
               <Bar dataKey="qieAmount" fill="#a78bfa" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
