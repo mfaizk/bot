@@ -125,7 +125,9 @@ export default function Dashboard() {
         {/* ===== USER GROWTH TREND ===== */}
         <div className="bg-[#111] rounded-2xl p-6 border border-white/10 shadow-xl mb-10">
           <div className="flex flex-col md:flex-row justify-between items-center mb-5 gap-4">
-            <h2 className="text-xl font-semibold">User Growth Trend</h2>
+            <h2 className="text-xl font-semibold">
+              Daily New User Registrations
+            </h2>
 
             <div className="flex gap-2">
               <ReactDatePicker
@@ -155,32 +157,33 @@ export default function Dashboard() {
           </div>
 
           <ResponsiveContainer width="100%" height={330}>
-            <LineChart data={userAnalytics?.chartData ?? []}>
+            <LineChart
+              data={userAnalytics?.chartData ?? []}
+              margin={{ left: 40, bottom: 50 }}
+            >
               <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
 
               <XAxis
                 dataKey="date"
-                tickFormatter={(value) => moment(value).format("DD MMM YYYY")} // format
+                tickFormatter={(value) => moment(value).format("DD MMM YYYY")}
                 angle={-35}
                 textAnchor="end"
                 height={60}
-                style={{ fontSize: 12, fill: "#6B7280", fontWeight: 500 }} // styling
+                style={{ fontSize: 12, fill: "#6B7280", fontWeight: 500 }}
               />
 
               <YAxis
-                tickFormatter={(v) => v.toLocaleString()} // optional formatting (1,000, 12,300 etc)
+                tickFormatter={(v) => v.toLocaleString()}
                 angle={-45}
                 textAnchor="end"
                 width={70}
-                style={{ fontSize: 12, fill: "#6B7280", fontWeight: 500 }} // styling
+                style={{ fontSize: 12, fill: "#6B7280", fontWeight: 500 }}
               />
 
               <Tooltip
                 labelFormatter={(value) => moment(value).format("DD MMM YYYY")}
                 formatter={(v) => v.toLocaleString()}
               />
-
-              {/* <Legend /> */}
 
               <Line
                 type="monotone"
@@ -189,15 +192,43 @@ export default function Dashboard() {
                 strokeWidth={3}
                 dot={{ r: 4 }}
               />
+
+              {/* ---- AXIS TITLES ---- */}
+              <text
+                x={0}
+                y={0}
+                transform="rotate(-90)"
+                textAnchor="middle"
+                dy={20}
+                dx={-170}
+                style={{ fontSize: 13, fill: "#ffffff", fontWeight: 600 }}
+              >
+                New Users Count
+              </text>
+
+              <text
+                x="50%"
+                y={310}
+                textAnchor="middle"
+                style={{ fontSize: 13, fill: "#ffffff", fontWeight: 600 }}
+              >
+                Date
+              </text>
             </LineChart>
           </ResponsiveContainer>
+          <p className="text-sm text-gray-500 mt-8">
+            Shows the number of new users registered per day within the selected
+            date range.
+          </p>
         </div>
 
         {/* ===== TRANSACTION VOLUME ===== */}
         <div className="bg-[#111] rounded-2xl p-6 border border-white/10 shadow-xl">
           <div className="flex flex-col md:flex-row justify-between items-center mb-5 gap-4">
             <div>
-              <h2 className="text-xl font-semibold">Transaction Volume</h2>
+              <h2 className="text-xl font-semibold">
+                Transaction Volume by Payment Method{" "}
+              </h2>
             </div>
             {/* NORMAL SELECT */}
             <div className="flex gap-4 flex-wrap">
@@ -238,32 +269,67 @@ export default function Dashboard() {
           </div>
 
           <ResponsiveContainer width="100%" height={330}>
-            <BarChart data={txChart?.transactions ?? []}>
+            <BarChart
+              data={txChart?.transactions ?? []}
+              margin={{ left: 40, bottom: 50 }}
+            >
               <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
+
               <XAxis
                 dataKey="createdAt"
-                tickFormatter={(value) => moment(value).format("DD MMM YYYY")} // format
+                tickFormatter={(value) => moment(value).format("DD MMM YYYY")}
                 angle={-35}
                 textAnchor="end"
                 height={60}
-                style={{ fontSize: 12, fill: "#6B7280", fontWeight: 500 }} // styling
+                style={{ fontSize: 12, fill: "#6B7280", fontWeight: 500 }}
               />
-              <YAxis />
-              <Tooltip />
-              {/* <Legend /> */}
+
+              <YAxis
+                style={{ fontSize: 12, fill: "#6B7280", fontWeight: 500 }}
+              />
+
+              <Tooltip
+                labelFormatter={(value) => moment(value).format("DD MMM YYYY")}
+              />
+
               <Bar dataKey="qieAmount" fill="#a78bfa" radius={[6, 6, 0, 0]} />
+
+              {/* ---- AXIS TITLES ---- */}
+              <text
+                x={0}
+                y={0}
+                transform="rotate(-90)"
+                textAnchor="middle"
+                dx={-160}
+                dy={20}
+                style={{ fontSize: 13, fill: "#fff", fontWeight: 600 }}
+              >
+                {transactionType === "QIE"
+                  ? "QIE Amount Received"
+                  : "Amount Received (USD)"}
+              </text>
+
+              <text
+                x="50%"
+                y={310}
+                textAnchor="middle"
+                style={{ fontSize: 13, fill: "#fff", fontWeight: 600 }}
+              >
+                Date
+              </text>
             </BarChart>
           </ResponsiveContainer>
-          <div>
+          <div className="flex gap-4 flex-col">
+            <p className="text-3xl underline">Total Amount Received</p>
             <div className="flex gap-4">
               <p>Total Qie Amount:</p>
-              <p>{txChart?.totalQieAmount || 0}</p>
-            </div>
-            <div className="flex gap-4">
-              <p>Total Amount:</p>
-              <p>{txChart?.totalAmount}</p>
+              <p>{txChart?.totalQieAmount || 0}QIE</p>
             </div>
           </div>
+          <p className="text-sm text-gray-500 mt-8">
+            Shows daily received payment amount based on selected payment method
+            and date range.
+          </p>
         </div>
       </div>
     </div>
