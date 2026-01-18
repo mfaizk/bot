@@ -7,6 +7,7 @@ import AuthGuard from "../guard/auth-guard";
 import GoogleAuthProvider from "../providers/google-auth";
 import "react-circular-progressbar/dist/styles.css";
 import ClientProvider from "../providers/client-provider";
+import "react-datepicker/dist/react-datepicker.css";
 
 const roboto = Roboto({
   weight: "400",
@@ -18,12 +19,11 @@ export const metadata = {
   description:
     "Automated crypto trading bot that runs 24/7, optimizing trades and maximizing profits with smart algorithmic execution.",
   icons: {
-    icon: "/favicon.ico",                  // primary favicon (ico)
-    shortcut: "/assets/logo1.png",         // used for shortcut icon
-    apple: "/assets/logo1.png",            // apple touch icon (optional)
+    icon: "/favicon.ico", // primary favicon (ico)
+    shortcut: "/assets/logo1.png", // used for shortcut icon
+    apple: "/assets/logo1.png", // apple touch icon (optional)
   },
 };
-
 
 export default function RootLayout({ children }) {
   return (

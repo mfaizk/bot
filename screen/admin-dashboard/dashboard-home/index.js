@@ -1,44 +1,97 @@
 "use client";
 
-import React from "react";
-
+import React, { useState } from "react";
+import { ArrowLeftRight, Receipt, TrendingUp, User } from "lucide-react";
+import { useGetAdminDashboard } from "@/queries/admin";
+import ActivityIndicator from "@/components/activity-indicator";
+import { useQuery } from "@tanstack/react-query";
+import moment from "moment";
+import { api } from "@/service/api-service";
 import StatCard from "./statCard";
 
 import {
-  ArrowLeftRight,
-  Receipt,
-  TrendingUp,
-  User,
-  Wallet,
-} from "lucide-react";
-import { useGetAdminDashboard } from "@/queries/admin";
-import NotActiveSubs from "@/components/no-active-subs";
-import ActivityIndicator from "@/components/activity-indicator";
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  BarChart,
+  Bar,
+  CartesianGrid,
+  ResponsiveContainer,
+} from "recharts";
+
+import ReactDatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
+const baseUrl = "https://productionb.qbots.trade/api/v1";
+
+/* ---------------- FETCH HOOKS ---------------- */
+const useUserAnalytics = (fromDate, toDate) =>
+  useQuery({
+    queryKey: ["userAnalytics", fromDate, toDate],
+    queryFn: async () => {
+      const res = await api.post(
+        `${baseUrl}/admin/userAnalytics`,
+        new URLSearchParams({ fromDate, toDate }),
+      );
+      return res.data.result;
+    },
+  });
+
+const useTransactionChart = (fromDate, toDate) =>
+  useQuery({
+    queryKey: ["transactionChart", fromDate, toDate],
+    queryFn: async () => {
+      const res = await api.post(
+        `${baseUrl}/admin/transactionChart`,
+        new URLSearchParams({
+          transactionType: "QIE",
+          fromDate,
+          toDate,
+        }),
+      );
+      return res.data.result;
+    },
+  });
+
 export default function Dashboard() {
-  const { data: dashboardCount, isLoading: userListPending } =
+  const { data: dashboardCount, isLoading: dashboardPending } =
     useGetAdminDashboard();
 
-  if (userListPending) {
+  const [userFrom, setUserFrom] = useState(new Date("2026-01-01"));
+  const [userTo, setUserTo] = useState(new Date("2026-01-07"));
+
+  const [txFrom, setTxFrom] = useState(new Date("2025-01-12"));
+  const [txTo, setTxTo] = useState(new Date("2025-01-17"));
+
+  const { data: userAnalytics } = useUserAnalytics(
+    moment(userFrom).format("YYYY-MM-DD"),
+    moment(userTo).format("YYYY-MM-DD"),
+  );
+  const { data: txChart } = useTransactionChart(
+    moment(txFrom).format("YYYY-MM-DD"),
+    moment(txTo).format("YYYY-MM-DD"),
+  );
+
+  if (dashboardPending) {
     return (
-      <div className=" min-h-screen flex flex-col justify-center items-center gap-4">
-        <ActivityIndicator isLoading className={"h-12 w-12"} />
-        <p className="text-2xl font-semibold">Getting Data...</p>
+      <div className="min-h-screen flex flex-col justify-center items-center gap-4 text-white">
+        <ActivityIndicator isLoading className="h-10 w-10" />
+        <p className="text-xl font-semibold">Fetching Dashboard...</p>
       </div>
     );
   }
 
+  const datePickerClasses =
+    "bg-gray-800 border border-gray-700 p-2 rounded-lg text-white text-sm w-[140px]";
+
   return (
-    <div className="min-h-screen  text-white ">
-      <div className="mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {/* <StatCard
-            title="Account Balance"
-            value={dashboardCount?.accountBalance}
-            currency="(USDT)"
-            subtitle="Lock Balance : 10
-Available to Trade : 100"
-            icon={Wallet}
-          /> */}
+    <div className="min-h-screen text-white px-4 md:px-6 py-6">
+      <div className="max-w-screen-2xl mx-auto">
+        {/* ===== STAT CARDS ===== */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
           <StatCard
             title="Exchange"
             value={dashboardCount?.exchangeConnectedCount}
@@ -54,7 +107,6 @@ Available to Trade : 100"
           <StatCard
             title="Total Bots"
             value={dashboardCount?.noOfBot}
-            currency="Bots"
             subtitle="Total Bots"
             icon={TrendingUp}
           />
@@ -64,6 +116,103 @@ Available to Trade : 100"
             subtitle="Total Users"
             icon={User}
           />
+        </div>
+
+        {/* ===== USER GROWTH TREND ===== */}
+        <div className="bg-[#111] rounded-2xl p-6 border border-white/10 shadow-xl mb-10">
+          <div className="flex flex-col md:flex-row justify-between items-center mb-5 gap-4">
+            <h2 className="text-xl font-semibold">User Growth Trend</h2>
+
+            <div className="flex gap-2">
+              <ReactDatePicker
+                selected={userFrom}
+                onChange={(date) => date && setUserFrom(date)}
+                selectsStart
+                startDate={userFrom}
+                endDate={userTo}
+                maxDate={userTo}
+                className={datePickerClasses}
+                dateFormat="yyyy-MM-dd"
+                placeholderText="From"
+              />
+              <span className="self-center">→</span>
+              <ReactDatePicker
+                selected={userTo}
+                onChange={(date) => date && setUserTo(date)}
+                selectsEnd
+                startDate={userFrom}
+                endDate={userTo}
+                minDate={userFrom}
+                className={datePickerClasses}
+                dateFormat="yyyy-MM-dd"
+                placeholderText="To"
+              />
+            </div>
+          </div>
+
+          <ResponsiveContainer width="100%" height={330}>
+            <LineChart data={userAnalytics?.chartData ?? []}>
+              <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
+              <XAxis dataKey="date" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Line
+                type="monotone"
+                dataKey="userCount"
+                stroke="#34D399"
+                strokeWidth={3}
+                dot={{ r: 4 }}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* ===== QIE TRANSACTIONS ===== */}
+        <div className="bg-[#111] rounded-2xl p-6 border border-white/10 shadow-xl">
+          <div className="flex flex-col md:flex-row justify-between items-center mb-5 gap-4">
+            <h2 className="text-xl font-semibold">QIE Transaction Volume</h2>
+
+            <div className="flex gap-2">
+              <ReactDatePicker
+                selected={txFrom}
+                onChange={(date) => date && setTxFrom(date)}
+                selectsStart
+                startDate={txFrom}
+                endDate={txTo}
+                maxDate={txTo}
+                className={datePickerClasses}
+                dateFormat="yyyy-MM-dd"
+                placeholderText="From"
+              />
+              <span className="self-center">→</span>
+              <ReactDatePicker
+                selected={txTo}
+                onChange={(date) => date && setTxTo(date)}
+                selectsEnd
+                startDate={txFrom}
+                endDate={txTo}
+                minDate={txFrom}
+                className={datePickerClasses}
+                dateFormat="yyyy-MM-dd"
+                placeholderText="To"
+              />
+            </div>
+          </div>
+
+          <ResponsiveContainer width="100%" height={330}>
+            <BarChart data={txChart?.transactions ?? []}>
+              <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
+              <XAxis
+                dataKey="createdAt"
+                tickFormatter={(v) => v.split("T")[0]}
+              />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="qieAmount" fill="#a78bfa" radius={[6, 6, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
       </div>
     </div>
