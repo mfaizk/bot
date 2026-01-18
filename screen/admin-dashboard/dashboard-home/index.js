@@ -235,7 +235,7 @@ export default function Dashboard() {
               <p>{txChart?.totalQieAmount || 0}</p>
             </div>
             <div className="flex gap-4">
-              <p>Total Paypal Amount:</p>
+              <p>Total Amount:</p>
               <p>{txChart?.totalAmount}</p>
             </div>
           </div>
