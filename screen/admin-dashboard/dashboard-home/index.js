@@ -242,7 +242,11 @@ export default function Dashboard() {
               <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
               <XAxis
                 dataKey="createdAt"
-                tickFormatter={(v) => v.split("T")[0]}
+                tickFormatter={(value) => moment(value).format("DD MMM YYYY")} // format
+                angle={-35}
+                textAnchor="end"
+                height={60}
+                style={{ fontSize: 12, fill: "#6B7280", fontWeight: 500 }} // styling
               />
               <YAxis />
               <Tooltip />
