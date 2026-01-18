@@ -40,14 +40,14 @@ const useUserAnalytics = (fromDate, toDate) =>
     },
   });
 
-const useTransactionChart = (fromDate, toDate) =>
+const useTransactionChart = (transactionType, fromDate, toDate) =>
   useQuery({
-    queryKey: ["transactionChart", fromDate, toDate],
+    queryKey: ["transactionChart", transactionType, fromDate, toDate],
     queryFn: async () => {
       const res = await api.post(
         `${baseUrl}/admin/transactionChart`,
         new URLSearchParams({
-          transactionType: "QIE",
+          transactionType,
           fromDate,
           toDate,
         }),
@@ -60,6 +60,8 @@ export default function Dashboard() {
   const { data: dashboardCount, isLoading: dashboardPending } =
     useGetAdminDashboard();
 
+  const [transactionType, setTransactionType] = useState("QIE");
+
   const [userFrom, setUserFrom] = useState(new Date("2026-01-01"));
   const [userTo, setUserTo] = useState(new Date("2026-01-07"));
 
@@ -70,7 +72,9 @@ export default function Dashboard() {
     moment(userFrom).format("YYYY-MM-DD"),
     moment(userTo).format("YYYY-MM-DD"),
   );
+
   const { data: txChart } = useTransactionChart(
+    transactionType,
     moment(txFrom).format("YYYY-MM-DD"),
     moment(txTo).format("YYYY-MM-DD"),
   );
@@ -168,35 +172,47 @@ export default function Dashboard() {
           </ResponsiveContainer>
         </div>
 
-        {/* ===== QIE TRANSACTIONS ===== */}
+        {/* ===== TRANSACTION VOLUME ===== */}
         <div className="bg-[#111] rounded-2xl p-6 border border-white/10 shadow-xl">
           <div className="flex flex-col md:flex-row justify-between items-center mb-5 gap-4">
-            <h2 className="text-xl font-semibold">QIE Transaction Volume</h2>
-
-            <div className="flex gap-2">
-              <ReactDatePicker
-                selected={txFrom}
-                onChange={(date) => date && setTxFrom(date)}
-                selectsStart
-                startDate={txFrom}
-                endDate={txTo}
-                maxDate={txTo}
-                className={datePickerClasses}
-                dateFormat="yyyy-MM-dd"
-                placeholderText="From"
-              />
-              <span className="self-center">→</span>
-              <ReactDatePicker
-                selected={txTo}
-                onChange={(date) => date && setTxTo(date)}
-                selectsEnd
-                startDate={txFrom}
-                endDate={txTo}
-                minDate={txFrom}
-                className={datePickerClasses}
-                dateFormat="yyyy-MM-dd"
-                placeholderText="To"
-              />
+            <div>
+              <h2 className="text-xl font-semibold">Transaction Volume</h2>
+            </div>
+            {/* NORMAL SELECT */}
+            <div className="flex gap-4 flex-wrap">
+              <div className="flex gap-2">
+                <ReactDatePicker
+                  selected={txFrom}
+                  onChange={(date) => date && setTxFrom(date)}
+                  selectsStart
+                  startDate={txFrom}
+                  endDate={txTo}
+                  maxDate={txTo}
+                  className={datePickerClasses}
+                  dateFormat="yyyy-MM-dd"
+                  placeholderText="From"
+                />
+                <span className="self-center">→</span>
+                <ReactDatePicker
+                  selected={txTo}
+                  onChange={(date) => date && setTxTo(date)}
+                  selectsEnd
+                  startDate={txFrom}
+                  endDate={txTo}
+                  minDate={txFrom}
+                  className={datePickerClasses}
+                  dateFormat="yyyy-MM-dd"
+                  placeholderText="To"
+                />
+              </div>
+              <select
+                value={transactionType}
+                onChange={(e) => setTransactionType(e.target.value)}
+                className="bg-gray-900 border border-gray-700 p-2 rounded-lg text-white text-sm"
+              >
+                <option value="QIE">QIE</option>
+                <option value="PAYPAL">PAYPAL</option>
+              </select>
             </div>
           </div>
 
@@ -213,6 +229,16 @@ export default function Dashboard() {
               <Bar dataKey="qieAmount" fill="#a78bfa" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
+          <div>
+            <div className="flex gap-4">
+              <p>Total Qie Amount:</p>
+              <p>{txChart?.totalQieAmount || 0}</p>
+            </div>
+            <div className="flex gap-4">
+              <p>Total Paypal Amount:</p>
+              <p>{txChart?.totalAmount}</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
