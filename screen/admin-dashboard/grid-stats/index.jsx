@@ -129,7 +129,7 @@ export default function GridStats() {
         ) : (
           <>
             <StatCard
-              title="Total Users"
+              title="Grid Bot Users"
               value={stats?.total_users}
               icon={Users}
             />

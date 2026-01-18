@@ -163,7 +163,7 @@ export default function DCAStats() {
         ) : (
           <>
             <StatCard
-              title="Total Users"
+              title="DCA Bot Users"
               value={Number(summary?.total_users ?? 0)}
               icon={Users}
             />
