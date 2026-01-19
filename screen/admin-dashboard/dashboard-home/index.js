@@ -1,69 +1,335 @@
 "use client";
 
-import React from "react";
-
+import React, { useState } from "react";
+import { ArrowLeftRight, Receipt, TrendingUp, User } from "lucide-react";
+import { useGetAdminDashboard } from "@/queries/admin";
+import ActivityIndicator from "@/components/activity-indicator";
+import { useQuery } from "@tanstack/react-query";
+import moment from "moment";
+import { api } from "@/service/api-service";
 import StatCard from "./statCard";
 
 import {
-  ArrowLeftRight,
-  Receipt,
-  TrendingUp,
-  User,
-  Wallet,
-} from "lucide-react";
-import { useGetAdminDashboard } from "@/queries/admin";
-import NotActiveSubs from "@/components/no-active-subs";
-import ActivityIndicator from "@/components/activity-indicator";
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  BarChart,
+  Bar,
+  CartesianGrid,
+  ResponsiveContainer,
+} from "recharts";
+
+import ReactDatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
+const baseUrl = "https://productionb.qbots.trade/api/v1";
+
+/* ---------------- FETCH HOOKS ---------------- */
+const useUserAnalytics = (fromDate, toDate) =>
+  useQuery({
+    queryKey: ["userAnalytics", fromDate, toDate],
+    queryFn: async () => {
+      const res = await api.post(
+        `${baseUrl}/admin/userAnalytics`,
+        new URLSearchParams({ fromDate, toDate }),
+      );
+      return res.data.result;
+    },
+  });
+
+const useTransactionChart = (transactionType, fromDate, toDate) =>
+  useQuery({
+    queryKey: ["transactionChart", transactionType, fromDate, toDate],
+    queryFn: async () => {
+      const res = await api.post(
+        `${baseUrl}/admin/transactionChart`,
+        new URLSearchParams({
+          transactionType,
+          fromDate,
+          toDate,
+        }),
+      );
+      return res.data.result;
+    },
+  });
+
 export default function Dashboard() {
-  const { data: dashboardCount, isLoading: userListPending } =
+  const { data: dashboardCount, isLoading: dashboardPending } =
     useGetAdminDashboard();
 
-  if (userListPending) {
+  const [transactionType, setTransactionType] = useState("QIE");
+
+  const [userFrom, setUserFrom] = useState(new Date("2026-01-01"));
+  const [userTo, setUserTo] = useState(new Date("2026-01-07"));
+
+  const [txFrom, setTxFrom] = useState(new Date("2025-01-12"));
+  const [txTo, setTxTo] = useState(new Date("2025-01-17"));
+
+  const { data: userAnalytics } = useUserAnalytics(
+    moment(userFrom).format("YYYY-MM-DD"),
+    moment(userTo).format("YYYY-MM-DD"),
+  );
+
+  const { data: txChart } = useTransactionChart(
+    transactionType,
+    moment(txFrom).format("YYYY-MM-DD"),
+    moment(txTo).format("YYYY-MM-DD"),
+  );
+
+  if (dashboardPending) {
     return (
-      <div className=" min-h-screen flex flex-col justify-center items-center gap-4">
-        <ActivityIndicator isLoading className={"h-12 w-12"} />
-        <p className="text-2xl font-semibold">Getting Data...</p>
+      <div className="min-h-screen flex flex-col justify-center items-center gap-4 text-white">
+        <ActivityIndicator isLoading className="h-10 w-10" />
+        <p className="text-xl font-semibold">Fetching Dashboard...</p>
       </div>
     );
   }
 
+  const datePickerClasses =
+    "bg-gray-800 border border-gray-700 p-2 rounded-lg text-white text-sm w-[140px]";
+
   return (
-    <div className="min-h-screen  text-white ">
-      <div className="mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {/* <StatCard
-            title="Account Balance"
-            value={dashboardCount?.accountBalance}
-            currency="(USDT)"
-            subtitle="Lock Balance : 10
-Available to Trade : 100"
-            icon={Wallet}
-          /> */}
+    <div className="min-h-screen text-white px-4 md:px-6 py-6">
+      <div className="max-w-screen-2xl mx-auto">
+        {/* ===== STAT CARDS ===== */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-10">
           <StatCard
             title="Exchange"
             value={dashboardCount?.exchangeConnectedCount}
             subtitle="Connected Exchange"
             icon={ArrowLeftRight}
           />
-          <StatCard
+          {/* <StatCard
             title="Transactions"
             value={dashboardCount?.transactionCount}
             subtitle="Transactions"
             icon={Receipt}
-          />
-          <StatCard
+          /> */}
+          {/* <StatCard
             title="Total Bots"
             value={dashboardCount?.noOfBot}
-            currency="Bots"
             subtitle="Total Bots"
             icon={TrendingUp}
-          />
+          /> */}
           <StatCard
             title="Users"
             value={dashboardCount?.userCounts}
             subtitle="Total Users"
             icon={User}
           />
+        </div>
+
+        {/* ===== USER GROWTH TREND ===== */}
+        <div className="bg-[#111] rounded-2xl p-6 border border-white/10 shadow-xl mb-10">
+          <div className="flex flex-col md:flex-row justify-between items-center mb-5 gap-4">
+            <h2 className="text-xl font-semibold">
+              Daily New User Registrations
+            </h2>
+
+            <div className="flex gap-2">
+              <ReactDatePicker
+                selected={userFrom}
+                onChange={(date) => date && setUserFrom(date)}
+                selectsStart
+                startDate={userFrom}
+                endDate={userTo}
+                maxDate={userTo}
+                className={datePickerClasses}
+                dateFormat="yyyy-MM-dd"
+                placeholderText="From"
+              />
+              <span className="self-center">→</span>
+              <ReactDatePicker
+                selected={userTo}
+                onChange={(date) => date && setUserTo(date)}
+                selectsEnd
+                startDate={userFrom}
+                endDate={userTo}
+                minDate={userFrom}
+                className={datePickerClasses}
+                dateFormat="yyyy-MM-dd"
+                placeholderText="To"
+              />
+            </div>
+          </div>
+
+          <ResponsiveContainer width="100%" height={330}>
+            <LineChart
+              data={userAnalytics?.chartData ?? []}
+              margin={{ left: 40, bottom: 50 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
+
+              <XAxis
+                dataKey="date"
+                tickFormatter={(value) => moment(value).format("DD MMM YYYY")}
+                angle={-35}
+                textAnchor="end"
+                height={60}
+                style={{ fontSize: 12, fill: "#6B7280", fontWeight: 500 }}
+              />
+
+              <YAxis
+                tickFormatter={(v) => v.toLocaleString()}
+                angle={-45}
+                textAnchor="end"
+                width={70}
+                style={{ fontSize: 12, fill: "#6B7280", fontWeight: 500 }}
+              />
+
+              <Tooltip
+                labelFormatter={(value) => moment(value).format("DD MMM YYYY")}
+                formatter={(v) => v.toLocaleString()}
+              />
+
+              <Line
+                type="monotone"
+                dataKey="userCount"
+                stroke="#34D399"
+                strokeWidth={3}
+                dot={{ r: 4 }}
+              />
+
+              {/* ---- AXIS TITLES ---- */}
+              <text
+                x={0}
+                y={0}
+                transform="rotate(-90)"
+                textAnchor="middle"
+                dy={20}
+                dx={-170}
+                style={{ fontSize: 13, fill: "#ffffff", fontWeight: 600 }}
+              >
+                New Users Count
+              </text>
+
+              <text
+                x="50%"
+                y={310}
+                textAnchor="middle"
+                style={{ fontSize: 13, fill: "#ffffff", fontWeight: 600 }}
+              >
+                Date
+              </text>
+            </LineChart>
+          </ResponsiveContainer>
+          <p className="text-sm text-gray-500 mt-8">
+            Shows the number of new users registered per day within the selected
+            date range.
+          </p>
+        </div>
+
+        {/* ===== TRANSACTION VOLUME ===== */}
+        <div className="bg-[#111] rounded-2xl p-6 border border-white/10 shadow-xl">
+          <div className="flex flex-col md:flex-row justify-between items-center mb-5 gap-4">
+            <div>
+              <h2 className="text-xl font-semibold">
+                Transaction Volume by Payment Method{" "}
+              </h2>
+            </div>
+            {/* NORMAL SELECT */}
+            <div className="flex gap-4 flex-wrap">
+              <div className="flex gap-2">
+                <ReactDatePicker
+                  selected={txFrom}
+                  onChange={(date) => date && setTxFrom(date)}
+                  selectsStart
+                  startDate={txFrom}
+                  endDate={txTo}
+                  maxDate={txTo}
+                  className={datePickerClasses}
+                  dateFormat="yyyy-MM-dd"
+                  placeholderText="From"
+                />
+                <span className="self-center">→</span>
+                <ReactDatePicker
+                  selected={txTo}
+                  onChange={(date) => date && setTxTo(date)}
+                  selectsEnd
+                  startDate={txFrom}
+                  endDate={txTo}
+                  minDate={txFrom}
+                  className={datePickerClasses}
+                  dateFormat="yyyy-MM-dd"
+                  placeholderText="To"
+                />
+              </div>
+              <select
+                value={transactionType}
+                onChange={(e) => setTransactionType(e.target.value)}
+                className="bg-gray-900 border border-gray-700 p-2 rounded-lg text-white text-sm"
+              >
+                <option value="QIE">QIE</option>
+                <option value="PAYPAL">PAYPAL</option>
+              </select>
+            </div>
+          </div>
+
+          <ResponsiveContainer width="100%" height={330}>
+            <BarChart
+              data={txChart?.transactions ?? []}
+              margin={{ left: 40, bottom: 50 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
+
+              <XAxis
+                dataKey="createdAt"
+                tickFormatter={(value) => moment(value).format("DD MMM YYYY")}
+                angle={-35}
+                textAnchor="end"
+                height={60}
+                style={{ fontSize: 12, fill: "#6B7280", fontWeight: 500 }}
+              />
+
+              <YAxis
+                style={{ fontSize: 12, fill: "#6B7280", fontWeight: 500 }}
+              />
+
+              <Tooltip
+                labelFormatter={(value) => moment(value).format("DD MMM YYYY")}
+              />
+
+              <Bar dataKey="qieAmount" fill="#a78bfa" radius={[6, 6, 0, 0]} />
+
+              {/* ---- AXIS TITLES ---- */}
+              <text
+                x={0}
+                y={0}
+                transform="rotate(-90)"
+                textAnchor="middle"
+                dx={-160}
+                dy={20}
+                style={{ fontSize: 13, fill: "#fff", fontWeight: 600 }}
+              >
+                {transactionType === "QIE"
+                  ? "QIE Amount Received"
+                  : "Amount Received (USD)"}
+              </text>
+
+              <text
+                x="50%"
+                y={310}
+                textAnchor="middle"
+                style={{ fontSize: 13, fill: "#fff", fontWeight: 600 }}
+              >
+                Date
+              </text>
+            </BarChart>
+          </ResponsiveContainer>
+          <div className="flex gap-4 flex-col">
+            <p className="text-3xl underline">Total Amount Received</p>
+            <div className="flex gap-4">
+              <p>Total Qie Amount:</p>
+              <p>{txChart?.totalQieAmount || 0}QIE</p>
+            </div>
+          </div>
+          <p className="text-sm text-gray-500 mt-8">
+            Shows daily received payment amount based on selected payment method
+            and date range.
+          </p>
         </div>
       </div>
     </div>

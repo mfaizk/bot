@@ -105,7 +105,7 @@ export default function AdminDashboardHeader() {
                   key={idx}
                   onClick={() => setMenuOpen(false)}
                   className={`flex items-center w-full px-4 py-2 rounded-md transition ${isActive(
-                    path
+                    path,
                   )}`}
                 >
                   <Icon className="w-4 h-4 mr-2" />
@@ -120,7 +120,7 @@ export default function AdminDashboardHeader() {
                   <Icon className="w-4 h-4 mr-2" />
                   {label}
                 </button>
-              )
+              ),
             )}
           </div>
         )}
