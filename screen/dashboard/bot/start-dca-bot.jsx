@@ -37,7 +37,7 @@ import clsx from "clsx";
 import { formatCurrency } from "@/utils";
 const TradingViewWidget = dynamic(
   () => import("@/components/trading-view-widget"),
-  { ssr: false }
+  { ssr: false },
 );
 const tabs = ["Trades", "Logs"];
 
@@ -139,7 +139,7 @@ export default function StartDCABot() {
                               className={clsx(
                                 "cursor-pointer",
                                 (filledRefetchloading || logRefetchLoading) &&
-                                  "animate-spin"
+                                  "animate-spin",
                               )}
                             />
                           </div>
@@ -353,13 +353,17 @@ export default function StartDCABot() {
                     {botData?.config?.exchangeName || "--"}
                   </div>
                 </div>
+                <div className="flex justify-between">
+                  <div className="text-sm text-gray-400 mb-1">Bot Type</div>
+                  <div className="text-base text-white capitalize">DCA</div>
+                </div>
                 {/* Buttons + PnL unchanged */}
                 <button
                   className={clsx(
                     "w-full mt-2 py-3 rounded-xl text-white font-semibold  transition-all capitalize",
                     Number(botPNL?.realized?.realizedPnl || 0) == 0
                       ? "bg-pink-600 hover:bg-pink-700"
-                      : "bg-pink-600/50 hover:bg-pink-600/50"
+                      : "bg-pink-600/50 hover:bg-pink-600/50",
                   )}
                   onClick={() => {
                     if (Number(botPNL?.realized?.realizedPnl || 0) == 0) {
@@ -391,7 +395,7 @@ export default function StartDCABot() {
                     <span className="text-white">
                       ${" "}
                       {Number(botPNL?.unrealized?.avgEntryPrice || 0).toFixed(
-                        4
+                        4,
                       )}
                     </span>
                   </div>
@@ -417,12 +421,12 @@ export default function StartDCABot() {
                     >
                       ${" "}
                       {Number(botPNL?.unrealized?.unrealizedPnl || 0).toFixed(
-                        4
+                        4,
                       )}
                       <span className="ml-1 text-xs text-gray-400">
                         (
                         {Number(
-                          botPNL?.unrealized?.unrealizedPnlPct || 0
+                          botPNL?.unrealized?.unrealizedPnlPct || 0,
                         ).toFixed(2)}
                         %)
                       </span>

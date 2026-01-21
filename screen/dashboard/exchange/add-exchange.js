@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Eye, EyeOff, Info, Copy } from "lucide-react";
+import { Eye, EyeOff, Info, Copy, TriangleAlert } from "lucide-react";
 import { IconExchange, IconTrashXFilled } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import OTPModal from "../../../components/otp-modal";
@@ -580,11 +580,14 @@ const DeleteModal = ({ open, setOpen, data, refetch }) => {
     <Modal open={open} setOpen={setOpen}>
       <div className="flex items-center justify-center flex-col">
         <p className="font-semibold text-2xl">Confirmation</p>
-        <p className="mt-6">Are you sure you want to delete this?</p>
+
+        <TriangleAlert className="text-red-500 size-14 my-4" />
+        <p className="">Are you sure you want to delete this?</p>
 
         {/* warning text */}
-        <p className="mt-2 text-sm text-red-500 font-medium">
-          Please stop the bot before deleting the key.
+        <p className="mt-2 text-sm text-red-500 font-medium text-center">
+          Deleting these API keys will stop and halt the bot that is running on
+          this exchange.
         </p>
 
         <div className="w-full mt-4 flex flex-row gap-4 ">

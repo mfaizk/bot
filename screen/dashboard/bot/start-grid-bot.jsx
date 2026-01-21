@@ -36,7 +36,7 @@ import clsx from "clsx";
 import { formatCurrency } from "@/utils";
 const TradingViewWidget = dynamic(
   () => import("@/components/trading-view-widget"),
-  { ssr: false }
+  { ssr: false },
 );
 
 export default function StartGridBot() {
@@ -154,7 +154,7 @@ export default function StartGridBot() {
                                   logRefetchLoading ||
                                   cancelledRefetchLoading ||
                                   pendingRefetchLoading) &&
-                                  "animate-spin"
+                                  "animate-spin",
                               )}
                             />
                           </div>
@@ -350,6 +350,11 @@ export default function StartGridBot() {
                   <div className="text-base text-white capitalize">
                     {botData?.symbol || "--"}
                   </div>
+                </div>
+
+                <div className="flex justify-between">
+                  <div className="text-sm text-gray-400 mb-1">Bot Type</div>
+                  <div className="text-base text-white capitalize">Grid</div>
                 </div>
 
                 <div className="flex items-center justify-center gap-4">
