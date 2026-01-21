@@ -581,6 +581,12 @@ const DeleteModal = ({ open, setOpen, data, refetch }) => {
       <div className="flex items-center justify-center flex-col">
         <p className="font-semibold text-2xl">Confirmation</p>
         <p className="mt-6">Are you sure you want to delete this?</p>
+
+        {/* warning text */}
+        <p className="mt-2 text-sm text-red-500 font-medium">
+          Please stop the bot before deleting the key.
+        </p>
+
         <div className="w-full mt-4 flex flex-row gap-4 ">
           <button
             className="bg-gray-300 w-full flex justify-center items-center h-10 rounded text-black"
