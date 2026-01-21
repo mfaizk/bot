@@ -85,7 +85,7 @@ export default function AddExchange() {
     },
     onError: (err) => {
       toast.error(
-        err?.response?.data?.responseMessage || "Something went wrong"
+        err?.response?.data?.responseMessage || "Something went wrong",
       );
       // setIsOpen(false);
       // resetForm();
@@ -163,11 +163,20 @@ export default function AddExchange() {
       toast.error("Unable to copy");
     }
   };
+  console.log(profileData, "profileData>>>");
 
   const filteredExchangeOption = useMemo(() => {
+    const activePlan = profileData?.subscriptionDetail?.find(
+      (item) => item?.planStatus == "ACTIVE",
+    );
+
+    if (!activePlan) {
+      return exchangeOptions?.filter((item) => item?.value != "mexc");
+    }
+
     if (
-      profileData?.subscriptionDetail?.[0]?.planStatus == "ACTIVE" &&
-      profileData?.subscriptionDetail?.[0]?.planName == "PRO"
+      String(activePlan?.planStatus)?.toLowerCase() == "active" &&
+      String(activePlan?.planName)?.toLowerCase() == "pro"
     ) {
       return exchangeOptions;
     }
@@ -307,7 +316,7 @@ export default function AddExchange() {
               "flex flex-col items-center text-center  border border-dashed border-gray-700 rounded-xl mb-6",
               !exchangeKeyListLoading && exchangeKeyList?.length > 0
                 ? "py-0"
-                : "py-16"
+                : "py-16",
             )}
           >
             {exchangeKeyListLoading ? (
@@ -572,6 +581,12 @@ const DeleteModal = ({ open, setOpen, data, refetch }) => {
       <div className="flex items-center justify-center flex-col">
         <p className="font-semibold text-2xl">Confirmation</p>
         <p className="mt-6">Are you sure you want to delete this?</p>
+
+        {/* warning text */}
+        <p className="mt-2 text-sm text-red-500 font-medium">
+          Please stop the bot before deleting the key.
+        </p>
+
         <div className="w-full mt-4 flex flex-row gap-4 ">
           <button
             className="bg-gray-300 w-full flex justify-center items-center h-10 rounded text-black"
