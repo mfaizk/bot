@@ -85,7 +85,7 @@ export default function AddExchange() {
     },
     onError: (err) => {
       toast.error(
-        err?.response?.data?.responseMessage || "Something went wrong"
+        err?.response?.data?.responseMessage || "Something went wrong",
       );
       // setIsOpen(false);
       // resetForm();
@@ -163,11 +163,20 @@ export default function AddExchange() {
       toast.error("Unable to copy");
     }
   };
+  console.log(profileData, "profileData>>>");
 
   const filteredExchangeOption = useMemo(() => {
+    const activePlan = profileData?.subscriptionDetail?.find(
+      (item) => item?.planStatus == "ACTIVE",
+    );
+
+    if (!activePlan) {
+      return exchangeOptions?.filter((item) => item?.value != "mexc");
+    }
+
     if (
-      profileData?.subscriptionDetail?.[0]?.planStatus == "ACTIVE" &&
-      profileData?.subscriptionDetail?.[0]?.planName == "PRO"
+      String(activePlan?.planStatus)?.toLowerCase() == "active" &&
+      String(activePlan?.planName)?.toLowerCase() == "pro"
     ) {
       return exchangeOptions;
     }
@@ -307,7 +316,7 @@ export default function AddExchange() {
               "flex flex-col items-center text-center  border border-dashed border-gray-700 rounded-xl mb-6",
               !exchangeKeyListLoading && exchangeKeyList?.length > 0
                 ? "py-0"
-                : "py-16"
+                : "py-16",
             )}
           >
             {exchangeKeyListLoading ? (

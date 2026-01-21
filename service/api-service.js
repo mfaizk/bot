@@ -23,8 +23,9 @@ export const api = axios.create({
 
 api.interceptors.request.use((config) => {
   const token = getCookie("token");
+
   // const token =
-  //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjI4LCJtb2JpbGVOdW1iZXIiOiJxaWJvdDc4NzBAZ21haWwuY29tIiwidXNlclR5cGUiOiJBRE1JTiIsImlhdCI6MTc2MTY1NDE1OCwiZXhwIjoxNzYxOTEzMzU4fQ.RRqorEflCaD731PAJngYSsXH5rFQzk6J9qpvYvYJpxc";
+  //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIwLCJlbWFpbCI6Imp1YW5AcWlld2FsbGV0Lm1lIiwidXNlclR5cGUiOiJVU0VSIiwic3RhdHVzIjoiQUNUSVZFIiwiaWF0IjoxNzY4OTg5MjcyLCJleHAiOjE3NjkwNzU2NzJ9.Ey3yuZB6o6GQ-U4j3Pov5jhtYc5VUAv63fsBf9DHyeA";
 
   return {
     ...config,
@@ -49,5 +50,5 @@ api.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
