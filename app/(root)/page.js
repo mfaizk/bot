@@ -11,12 +11,14 @@ import NeonHero from "../../screen/home/NeonHero";
 import Section1 from "../../screen/home/Section1";
 import ReferralSection from "../../screen/home/referalSection";
 import HomeTab from "../../screen/home/homeTab";
+import IntoVideo from "@/screen/home/vider";
 
 export default function Home() {
   return (
     <div className=" px-[-1%] ">
       <Herosection />
       <StrategiesSection />
+      <IntoVideo />
       <WhyChoose />
       <HowItWorks />
       <SupportsExchanges />
