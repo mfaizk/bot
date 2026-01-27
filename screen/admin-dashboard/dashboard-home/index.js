@@ -2,7 +2,10 @@
 
 import React, { useState } from "react";
 import { ArrowLeftRight, Receipt, TrendingUp, User } from "lucide-react";
-import { useGetAdminDashboard } from "@/queries/admin";
+import {
+  useGetActiveSubscriptionCount,
+  useGetAdminDashboard,
+} from "@/queries/admin";
 import ActivityIndicator from "@/components/activity-indicator";
 import { useQuery } from "@tanstack/react-query";
 import moment from "moment";
@@ -59,14 +62,15 @@ const useTransactionChart = (transactionType, fromDate, toDate) =>
 export default function Dashboard() {
   const { data: dashboardCount, isLoading: dashboardPending } =
     useGetAdminDashboard();
+  const { data: planCountData = {} } = useGetActiveSubscriptionCount();
 
   const [transactionType, setTransactionType] = useState("QIE");
 
-  const [userFrom, setUserFrom] = useState(new Date("2026-01-01"));
-  const [userTo, setUserTo] = useState(new Date("2026-01-07"));
+  const [userFrom, setUserFrom] = useState();
+  const [userTo, setUserTo] = useState();
 
-  const [txFrom, setTxFrom] = useState(new Date("2025-01-12"));
-  const [txTo, setTxTo] = useState(new Date("2025-01-17"));
+  const [txFrom, setTxFrom] = useState();
+  const [txTo, setTxTo] = useState();
 
   const { data: userAnalytics } = useUserAnalytics(
     moment(userFrom).format("YYYY-MM-DD"),
@@ -94,31 +98,40 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen text-white px-4 md:px-6 py-6">
       <div className="max-w-screen-2xl mx-auto">
+        {console.log(planCountData, "planCountData>>")}
+
         {/* ===== STAT CARDS ===== */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-10">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
           <StatCard
             title="Exchange"
             value={dashboardCount?.exchangeConnectedCount}
-            subtitle="Connected Exchange"
+            subtitle="Connected Exchanges By Users"
             icon={ArrowLeftRight}
           />
-          {/* <StatCard
-            title="Transactions"
-            value={dashboardCount?.transactionCount}
-            subtitle="Transactions"
-            icon={Receipt}
-          /> */}
-          {/* <StatCard
-            title="Total Bots"
-            value={dashboardCount?.noOfBot}
-            subtitle="Total Bots"
-            icon={TrendingUp}
-          /> */}
+
           <StatCard
             title="Users"
             value={dashboardCount?.userCounts}
             subtitle="Total Users"
             icon={User}
+          />
+          <StatCard
+            title="Free Plan Users"
+            value={planCountData?.Free}
+            subtitle="Users"
+            icon={Receipt}
+          />
+          <StatCard
+            title="Starter Plan Users"
+            value={planCountData?.Pro}
+            subtitle="Users"
+            icon={TrendingUp}
+          />
+          <StatCard
+            title="Pro Plan Users"
+            value={planCountData?.Starter}
+            subtitle="Users"
+            icon={TrendingUp}
           />
         </div>
 
@@ -143,6 +156,7 @@ export default function Dashboard() {
               />
               <span className="self-center">→</span>
               <ReactDatePicker
+                disabled={!userFrom}
                 selected={userTo}
                 onChange={(date) => date && setUserTo(date)}
                 selectsEnd
@@ -246,6 +260,7 @@ export default function Dashboard() {
                 />
                 <span className="self-center">→</span>
                 <ReactDatePicker
+                  disabled={!txFrom}
                   selected={txTo}
                   onChange={(date) => date && setTxTo(date)}
                   selectsEnd

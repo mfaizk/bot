@@ -84,11 +84,11 @@ export const getAllUserList = async ({ page = 1, limit = 10 }) => {
   }
 };
 
-export const useGetUserSubscription = ({ page = 1, limit = 10 ,id}) => {
+export const useGetUserSubscription = ({ page = 1, limit = 10, id }) => {
   return useQuery({
-    queryKey: ["userSubscription", page, limit,id],
+    queryKey: ["userSubscription", page, limit, id],
     queryFn: () => {
-      return getuserSubscription({ page, limit ,id});
+      return getuserSubscription({ page, limit, id });
     },
     select: (data) => {
       return data?.result || [];
@@ -97,7 +97,7 @@ export const useGetUserSubscription = ({ page = 1, limit = 10 ,id}) => {
   });
 };
 
-export const getuserSubscription = async ({ page = 1, limit = 10 ,id}) => {
+export const getuserSubscription = async ({ page = 1, limit = 10, id }) => {
   try {
     const response = await api({
       method: "POST",
@@ -106,11 +106,32 @@ export const getuserSubscription = async ({ page = 1, limit = 10 ,id}) => {
         page: page,
         limit: limit,
       },
-    
     });
 
     return response?.data;
   } catch (error) {
     throw error;
   }
+};
+
+export const getActiveSubscriptionCount = async () => {
+  try {
+    const response = await api({
+      method: "GET",
+      url: "/subscription/getActiveSubscriptionCount",
+    });
+    return response?.data?.result || {};
+  } catch (error) {
+    console.error("Error", error);
+    throw error;
+  }
+};
+
+export const useGetActiveSubscriptionCount = () => {
+  return useQuery({
+    queryKey: ["getActiveSubscriptionCount"],
+    queryFn: () => {
+      return getActiveSubscriptionCount();
+    },
+  });
 };
