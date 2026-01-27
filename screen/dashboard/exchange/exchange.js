@@ -72,7 +72,7 @@ export default function Exchange() {
                 router.push("/dashboard/exchange/add-exchange");
               }}
             >
-              Manage Keys
+              Create/Manage Keys
             </button>
           </div>
           <div className="grid grid-cols-12 gap-6  w-full">

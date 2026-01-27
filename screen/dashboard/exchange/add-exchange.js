@@ -287,7 +287,7 @@ export default function AddExchange() {
               <h3 className="text-lg font-semibold mb-3">
                 Whitelist These Server IPs
               </h3>
-              {["139.59.42.213", "157.245.99.231"]?.map((ip) => (
+              {["64.227.185.157", "64.227.150.170"]?.map((ip) => (
                 <div
                   key={ip}
                   className="flex items-center justify-between bg-[#1a1a25] px-4 py-2 rounded-lg mb-2 text-gray-300"
