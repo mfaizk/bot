@@ -9,6 +9,7 @@ import {
   Bot,
   ChevronLeft,
   ChevronRight,
+  School,
 } from "lucide-react";
 import Link from "next/link";
 import { IconCurrency, IconExchange, IconHistory } from "@tabler/icons-react";
@@ -39,7 +40,7 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
       type: "link",
     },
     { label: "Bots", path: "/dashboard/bot", Icon: Bot, type: "link" },
-   
+
     {
       label: "Pricing",
       path: "/dashboard/pricing",
@@ -62,6 +63,12 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
       label: "Settings",
       path: "/dashboard/settings",
       Icon: Settings2,
+      type: "link",
+    },
+    {
+      label: "Tutorial",
+      path: "https://www.docs.qbots.trade/",
+      Icon: School,
       type: "link",
     },
     { label: "Logout", Icon: LogOut, type: "button", onClick: logoutHandler },
