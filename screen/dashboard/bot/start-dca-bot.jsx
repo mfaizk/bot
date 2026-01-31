@@ -103,7 +103,7 @@ export default function StartDCABot() {
           <main className="w-full grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Left: Chart & controls (span 2 columns on large screens) */}
             <section className="col-span-1 lg:col-span-2 bg-[#0f0f11] rounded-2xl p-6 shadow-lg border border-[#1b1b1e]">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between md:flex-row gap-2 flex-col">
                 <h1 className="text-3xl font-bold">
                   Bot Status:{" "}
                   {isBotRunning ? (
@@ -112,6 +112,10 @@ export default function StartDCABot() {
                     <span className="text-red-600">Offline</span>
                   )}
                   <span> </span>
+                </h1>
+
+                <h1 className="text-3xl font-bold">
+                  Pair: <span> {botData?.pair || "--"} </span>
                 </h1>
               </div>
 
