@@ -262,10 +262,10 @@ function PlanCard({ plan, planType = "monthly" ,token}) {
         )}
       </ul>
 
-      <p className="mt-6 text-gray-400 text-xs sm:text-sm leading-relaxed">
+      {/* <p className="mt-6 text-gray-400 text-xs sm:text-sm leading-relaxed">
         Explore grid & DCA on supported exchanges. Higher price programmatically
         automated and monitored.
-      </p>
+      </p> */}
 
       <div className="mt-8">
         <button

@@ -157,7 +157,7 @@ export default function StartGridBot() {
                                   logRefetchLoading ||
                                   cancelledRefetchLoading ||
                                   pendingRefetchLoading) &&
-                                  "animate-spin",
+                                "animate-spin",
                               )}
                             />
                           </div>
@@ -405,6 +405,18 @@ export default function StartGridBot() {
                       }
                     >
                       ${Number(PNLData?.realizedPnL || 0).toFixed(3)}
+                    </span>
+                  </p>
+                  <p className="text-md text-gray-400">
+                    Unrealized P&L:{" "}
+                    <span
+                      className={
+                        Number(botData?.unrealizedPnL || 0) < 0
+                          ? "text-red-500"
+                          : "text-green-500"
+                      }
+                    >
+                      ${Number(botData?.unrealizedPnL || 0).toFixed(3)}
                     </span>
                   </p>
                   <p className="text-md text-gray-400">
