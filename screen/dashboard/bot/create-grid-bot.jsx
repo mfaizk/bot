@@ -76,7 +76,8 @@ export default function CreateGridBot() {
       console.error("Error creating bot:", error);
     },
   });
-
+  // const quoteCurrency = selectedSymbol?.split("/")?.[1] || "USDT";
+  const quoteCurrency = "USDT";
   const formik = useFormik({
     initialValues: {
       gridLower: "",
@@ -163,9 +164,8 @@ export default function CreateGridBot() {
           }}
         >
           <span
-            className={`absolute left-1 top-1 h-5 w-5 rounded-full bg-white transform transition-transform duration-300 ${
-              value ? "translate-x-7" : ""
-            }`}
+            className={`absolute left-1 top-1 h-5 w-5 rounded-full bg-white transform transition-transform duration-300 ${value ? "translate-x-7" : ""
+              }`}
             style={{
               boxShadow: "0 2px 6px rgba(0,0,0,0.4)",
             }}
@@ -235,35 +235,40 @@ export default function CreateGridBot() {
                   {[
                     {
                       name: "gridLower",
-                      label: "Grid Lower",
+                      label: `Grid Lower (${quoteCurrency})`,
+                      prefix: "$",
                       tooltipInfo:
                         "This is the lowest price level where the bot is allowed to place buy orders. The bot is long-only and will never buy above the current market price. All buy orders are placed between the current market price and this lower limit. This value defines how far downward the bot is willing to accumulate the asset during price dips.",
                       placeholder: "Enter the lower range",
                     },
                     {
                       name: "gridUpper",
-                      label: "Grid Upper",
+                      label: `Grid Upper (${quoteCurrency})`,
+                      prefix: "$",
                       tooltipInfo:
                         "This represents the maximum take-profit price of the grid. After a buy order is filled, the bot sells the asset at the next higher grid level, capturing profit as price moves upward. When the price reaches the highest grid level, the bot executes a sell and completes that grid cycle. This value defines the upper profit boundary of the strategy.",
                       placeholder: "Enter the higher range",
                     },
                     {
                       name: "investment",
-                      label: "Investment",
+                      label: `investment (${quoteCurrency})`,
+                      prefix: "$",
                       tooltipInfo:
                         "This value represents the intended capital allocation for the bot and helps you plan how much balance you want to dedicate to this strategy. At present, this amount is informational only and is not strictly enforced by the bot during order placement. Actual trades are executed based on the configured order size and the available balance on the exchange, so the bot may use more or less than this amount depending on market conditions and open orders.",
                       placeholder: "10",
                     },
                     {
                       name: "stopLossPrice",
-                      label: "Stop Loss Price",
+                      label: `Stop Loss Price (${quoteCurrency})`,
+                      prefix: "$",
                       tooltipInfo:
                         "This is an optional emergency protection level. If the market price falls to or below this value, the bot immediately cancels all open orders, sells any remaining balance at market price, and stops execution. This helps protect capital during sharp or unexpected market drops.",
                       placeholder: "10",
                     },
                     {
                       name: "orderSize",
-                      label: "Order Size",
+                      label: `Order Size (${quoteCurrency})`,
+                      prefix: "$",
                       tooltipInfo:
                         "This specifies the amount used for each individual buy order placed by the bot. Every grid buy uses this fixed quantity. Smaller order sizes result in more granular trades, while larger sizes increase exposure per trade. This value must be compatible with the exchange’s minimum order requirements.",
                       placeholder: "6",
@@ -271,6 +276,8 @@ export default function CreateGridBot() {
                     {
                       name: "gridCount",
                       label: "Grids Count",
+                      prefix: null,
+
                       tooltipInfo:
                         "This determines how many grid levels are created between the lower and upper prices. Each grid level represents a buy-then-sell cycle. Increasing the grid count results in smaller price gaps and more frequent trades, while fewer grids result in larger price gaps and fewer trades. The grid levels are evenly distributed across the price range.",
                       placeholder: "10",
@@ -292,14 +299,24 @@ export default function CreateGridBot() {
                           </div>
                         )}
                       </div>
-                      <input
-                        name={f.name}
-                        value={formik.values[f.name]}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        className="w-full p-3 bg-[#1A1A24] rounded focus:outline-none"
-                        placeholder={f.placeholder}
-                      />
+                      <div className="relative">
+                        {f.prefix && (
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                            {f.prefix}
+                          </span>
+                        )}
+
+                        <input
+                          type="number"
+                          name={f.name}
+                          value={formik.values[f.name]}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          className={`w-full p-3 bg-[#1A1A24] rounded focus:outline-none ${f.prefix ? "pl-7" : ""
+                            }`}
+                          placeholder={f.placeholder}
+                        />
+                      </div>
                       {formik.touched[f.name] && formik.errors[f.name] && (
                         <div className="text-red-500 text-xs mt-1">
                           {formik.errors[f.name]}

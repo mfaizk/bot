@@ -40,10 +40,9 @@ function BotStatsCards() {
     <button
       onClick={() => setActiveTab(id)}
       className={`px-4 py-2 text-sm font-medium rounded-lg transition
-        ${
-          activeTab === id
-            ? "bg-primary text-white"
-            : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+        ${activeTab === id
+          ? "bg-primary text-white"
+          : "bg-gray-100 text-gray-600 hover:bg-gray-200"
         }`}
     >
       {label}
@@ -75,21 +74,30 @@ function BotStatsCards() {
             label="Filled Orders"
             value={gridStats?.filledOrders || 0}
           />
+
           <StatCard
             label="Realized PnL"
-            value={`$${gridStats?.realizedPnL?.toFixed(2) || 0}`}
-            highlight
+            value={`$${Number(gridStats?.realizedPnL || 0).toFixed(2)}`}
+            highlight={Number(gridStats?.realizedPnL || 0) > 0}
           />
-          <StatCard label="Grid Cycles" value={gridStats?.gridCycles || 0} />
+
+          <StatCard
+            label="Grid Cycles"
+            value={gridStats?.gridCycles || 0}
+          />
+
+          <StatCard
+            label="Active Bots"
+            value={gridStats?.activeBots || 0}
+          />
+
           {gridStats?.mostProfitableBot && (
             <StatCard
               label="Top Bot Profit"
-              value={`${
-                gridStats?.mostProfitableBot?.symbol
-              } • $${formatCurrency(
+              value={`${gridStats?.mostProfitableBot?.symbol} • $${Number(
                 gridStats?.mostProfitableBot?.profit || 0
-              )}`}
-              highlight
+              ).toFixed(2)}`}
+              highlight={Number(gridStats?.mostProfitableBot?.profit || 0) > 0}
             />
           )}
         </div>
