@@ -1,5 +1,6 @@
 "use client";
 import { useDcaSummary, useGridSummary } from "@/queries/dashboard";
+import { useFutureGridSummary } from "@/queries/futureGrid";
 import { formatCurrency } from "@/utils";
 import { useState } from "react";
 
@@ -15,6 +16,7 @@ function BotStatsCards() {
   const [activeTab, setActiveTab] = useState("grid");
   const { data: dcaStats, isLoading: dcaSummaryLoading } = useDcaSummary();
   const { data: gridStats, isLoading: gridSummaryLoading } = useGridSummary();
+  const { data: futureStats, isLoading: futureSummaryLoading } = useFutureGridSummary();
   // console.log(dcaSummary, gridSummary, "asdasd");
 
   // const gridStats = {
@@ -65,6 +67,8 @@ function BotStatsCards() {
       <div className="flex gap-2 mb-6">
         <TabButton id="grid" label="Grid Bot" />
         <TabButton id="dca" label="DCA Bot" />
+        <TabButton id="future" label="Future Grid Bot" />
+
       </div>
 
       {/* Grid Bot */}
@@ -100,6 +104,69 @@ function BotStatsCards() {
               highlight={Number(gridStats?.mostProfitableBot?.profit || 0) > 0}
             />
           )}
+        </div>
+      )}
+      {/* Future Grid Bot */}
+      {activeTab === "future" && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <StatCard
+            label="Filled Orders"
+            value={futureStats?.filledOrders || 0}
+          />
+
+          <StatCard
+            label="Realized PnL"
+            value={`$${Number(futureStats?.realizedPnL || 0).toFixed(2)}`}
+            highlight={Number(futureStats?.realizedPnL || 0) > 0}
+          />
+
+          <StatCard
+            label="Grid Cycles"
+            value={futureStats?.gridCycles || 0}
+          />
+
+          {futureStats?.mostProfitableBot && (
+            <StatCard
+              label="Top Bot Profit"
+              value={`${futureStats?.mostProfitableBot?.symbol} • $${Number(
+                futureStats?.mostProfitableBot?.profit || 0
+              ).toFixed(2)}`}
+              highlight={
+                Number(futureStats?.mostProfitableBot?.profit || 0) > 0
+              }
+            />
+          )}
+
+          {/* Regime Section */}
+          {/* Regime Section */}
+          {(() => {
+            const regime = futureStats?.regime || {};
+
+            return (
+              <>
+                <StatCard
+                  label="Sideways Bots"
+                  value={regime?.sidewaysBots ?? 0}
+                />
+                <StatCard
+                  label="Trending Bots"
+                  value={regime?.trendingBots ?? 0}
+                />
+                <StatCard
+                  label="Protection Active"
+                  value={regime?.protectionActiveBots ?? 0}
+                />
+                <StatCard
+                  label="Cooldown Bots"
+                  value={regime?.cooldownBots ?? 0}
+                />
+                <StatCard
+                  label="Cooldown Triggers"
+                  value={regime?.totalCooldownTriggers ?? 0}
+                />
+              </>
+            );
+          })()}
         </div>
       )}
       {/* DCA Bot */}

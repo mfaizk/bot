@@ -6,6 +6,7 @@ import { IconExchange } from "@tabler/icons-react";
 import Dropdown from "../../../components/dropdown";
 import { useRouter } from "next/navigation";
 import NotActiveSubs from "@/components/no-active-subs";
+import { useGetFutureBotList } from "@/queries/futureGrid";
 import CommingSoon from "@/components/comming-soon";
 import { useHaveActiveSubscriptions } from "@/queries/payment";
 import { useGetBotList, useGetDCABotList } from "@/queries/bot";
@@ -16,6 +17,7 @@ import { useUserProfile } from "@/queries/profile";
 const exchangeOptions = [
   { label: "New Grid Bot", value: "/create-grid-bot" },
   { label: "New DCA Bot", value: "/create-dca-bot" },
+  { label: "New Future Grid Bot", value: "/create-future-grid-bot" },
 ];
 
 const statusOptions = [
@@ -25,6 +27,8 @@ const statusOptions = [
 const statusOptionsBOT = [
   { label: "GRID BOT", value: "grid" },
   { label: "DCA BOT", value: "dca" },
+  { label: "FUTURE GRID BOT", value: "future" },
+
 ];
 
 export default function Bot() {
@@ -40,7 +44,8 @@ export default function Bot() {
   const { data: botList, isPending: botListPending } = useGetBotList({
     selectExchange,
   });
-
+  const { data: futureBotList, isPending: futureBotListPending } =
+    useGetFutureBotList();
   const { data: DCAbotList, isPending: DCAbotListPending } = useGetDCABotList();
 
   const handleOTPSubmit = (code) => {
@@ -73,7 +78,7 @@ export default function Bot() {
     return <NotActiveSubs />;
   }
 
-  if (botListPending || DCAbotListPending) {
+  if (botListPending || DCAbotListPending || futureBotListPending) {
     return (
       <div className=" min-h-screen flex flex-col justify-center items-center gap-4">
         <ActivityIndicator isLoading className={"h-12 w-12"} />
@@ -271,6 +276,74 @@ export default function Bot() {
                 </>
               )}
             </>
+            {selectedBotType == "future" && (
+              <>
+                {!futureBotList || futureBotList?.length === 0 ? (
+                  <div className="mt-20 sm:mt-30 w-full py-12 flex flex-col items-center justify-center ">
+                    <p className="mt-3 text-xl text-gray-400">
+                      No futures bots yet! Let’s create your first one
+                    </p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                    {futureBotList?.map((item, i) => {
+                      return (
+                        <div
+                          key={i}
+                          className="rounded-2xl p-5 bg-[#0b1229] border-white/10 border shadow-md hover:shadow-blue-500/10 hover:bg-[#121a36] min-h-[120px] cursor-pointer"
+                          onClick={() => {
+                            router.push(
+                              `/dashboard/bot/start-future-grid-bot/?botId=${encodeURIComponent(
+                                item?.id
+                              )}`
+                            );
+                          }}
+                        >
+                          <div className="flex items-start justify-between">
+                            <div className="w-10 h-10 rounded-md bg-[#141420] flex items-center justify-center text-pink-400">
+                              <img
+                                src="/assets/logo1.png"
+                                alt="Qbots Logo"
+                                className="w-16 h-12"
+                              />
+                            </div>
+                            <div
+                              className={clsx(
+                                "text-xs text-white px-2 py-1 rounded",
+                                item?.status === "RUNNING"
+                                  ? "bg-emerald-700/70"
+                                  : "bg-red-700/70"
+                              )}
+                            >
+                              {item?.status === "RUNNING" ? "Active" : "InActive"}
+                            </div>
+                          </div>
+
+                          <div className="flex justify-between mt-4">
+                            <div>
+                              <h4 className="text-md font-semibold">Exchange</h4>
+                              <p className="text-sm text-gray-300 mt-1 capitalize">
+                                {item?.exchange || "--"}
+                              </p>
+                            </div>
+                            <div>
+                              <h4 className="text-md font-semibold">Pair</h4>
+                              <p className="text-sm text-gray-300 mt-1">
+                                {item?.symbol}
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="mt-3 text-sm text-gray-400">
+                            Leverage: {item?.leverage || 1}x
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </>
+            )}
           </>
         )}
       </div>

@@ -32,8 +32,8 @@ export default function StrategiesSection() {
       title: "Futures Grid",
       description: "Amplify profits with leveraged grid trading.",
       icon: <Rocket className="w-8 h-8 text-primary" />,
-      status: "Coming Soon",
-      statusColor: "bg-primary text-purple-200",
+      status: "Active",
+      statusColor: "bg-emerald-700/70 text-white",
     },
     {
       title: "Momentum Strategy",

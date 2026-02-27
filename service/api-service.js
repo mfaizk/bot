@@ -8,7 +8,7 @@ import { toast } from "sonner";
 export const baseUrl = "https://productionb.qbots.trade/api/v1"; // live
 
 export const DCAbaseUrl = "https://dca.qbots.trade/api"; // UAT
-
+export const futureGridBotBaseUrl = "https://future-grid.qbots.trade/api";
 // socket
 // export const wssBaseUrl = "wss://wsocket.qbots.trade/"; // UAT
 export const wssBaseUrl = "wss://chartdata.qbots.trade"; // live
