@@ -107,68 +107,64 @@ function BotStatsCards() {
         </div>
       )}
       {/* Future Grid Bot */}
-      {activeTab === "future" && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <StatCard
-            label="Filled Orders"
-            value={futureStats?.filledOrders || 0}
-          />
+     {activeTab === "future" && (
+  <>
+    {/* ===== Main Future Stats ===== */}
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <StatCard
+        label="Filled Orders"
+        value={futureStats?.filledOrders || 0}
+      />
 
-          <StatCard
-            label="Realized PnL"
-            value={`$${Number(futureStats?.realizedPnL || 0).toFixed(2)}`}
-            highlight={Number(futureStats?.realizedPnL || 0) > 0}
-          />
+      <StatCard
+        label="Realized PnL"
+        value={`$${Number(futureStats?.realizedPnL || 0).toFixed(2)}`}
+        highlight={Number(futureStats?.realizedPnL || 0) > 0}
+      />
 
-          <StatCard
-            label="Grid Cycles"
-            value={futureStats?.gridCycles || 0}
-          />
+      <StatCard
+        label="Grid Cycles"
+        value={futureStats?.gridCycles || 0}
+      />
 
-          {futureStats?.mostProfitableBot && (
-            <StatCard
-              label="Top Bot Profit"
-              value={`${futureStats?.mostProfitableBot?.symbol} • $${Number(
-                futureStats?.mostProfitableBot?.profit || 0
-              ).toFixed(2)}`}
-              highlight={
-                Number(futureStats?.mostProfitableBot?.profit || 0) > 0
-              }
-            />
-          )}
-
-          {/* Regime Section */}
-          {/* Regime Section */}
-          {(() => {
-            const regime = futureStats?.regime || {};
-
-            return (
-              <>
-                <StatCard
-                  label="Sideways Bots"
-                  value={regime?.sidewaysBots ?? 0}
-                />
-                <StatCard
-                  label="Trending Bots"
-                  value={regime?.trendingBots ?? 0}
-                />
-                <StatCard
-                  label="Protection Active"
-                  value={regime?.protectionActiveBots ?? 0}
-                />
-                <StatCard
-                  label="Cooldown Bots"
-                  value={regime?.cooldownBots ?? 0}
-                />
-                <StatCard
-                  label="Cooldown Triggers"
-                  value={regime?.totalCooldownTriggers ?? 0}
-                />
-              </>
-            );
-          })()}
-        </div>
+      {futureStats?.mostProfitableBot && (
+        <StatCard
+          label="Top Bot Profit"
+          value={`${futureStats?.mostProfitableBot?.symbol} • $${Number(
+            futureStats?.mostProfitableBot?.profit || 0
+          ).toFixed(2)}`}
+          highlight={
+            Number(futureStats?.mostProfitableBot?.profit || 0) > 0
+          }
+        />
       )}
+    </div>
+
+    {/* ===== Regime Section ===== */}
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+      <StatCard
+        label="Sideways Bots"
+        value={futureStats?.regime?.sidewaysBots ?? 0}
+      />
+      <StatCard
+        label="Trending Bots"
+        value={futureStats?.regime?.trendingBots ?? 0}
+      />
+      <StatCard
+        label="Protection Active"
+        value={futureStats?.regime?.protectionActiveBots ?? 0}
+      />
+      <StatCard
+        label="Cooldown Bots"
+        value={futureStats?.regime?.cooldownBots ?? 0}
+      />
+      <StatCard
+        label="Cooldown Triggers"
+        value={futureStats?.regime?.totalCooldownTriggers ?? 0}
+      />
+    </div>
+  </>
+)}
       {/* DCA Bot */}
       {activeTab === "dca" && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
