@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Eye, EyeOff, Info, Copy } from "lucide-react";
 import { IconExchange } from "@tabler/icons-react";
 import Dropdown from "../../../components/dropdown";
+import moment from "moment";
 import { useRouter } from "next/navigation";
 import NotActiveSubs from "@/components/no-active-subs";
 import { useGetFutureBotList } from "@/queries/futureGrid";
@@ -317,14 +318,22 @@ export default function Bot() {
                                 item?.status === "STOPPED" &&
                                 "bg-red-500/20 text-red-400",
                                 item?.status === "ERROR" &&
-                                "bg-orange-500/20 text-orange-400"
+                                "bg-orange-500/20 text-orange-400",
+                                item?.status === "COOLDOWN" &&
+                                "bg-blue-500/20 text-blue-400"
                               )}
                             >
                               {item?.status === "RUNNING" && "Active"}
                               {item?.status === "WAITING" && "Waiting"}
                               {item?.status === "STOPPED" && "Stopped"}
                               {item?.status === "ERROR" && "Error"}
+                              {item?.status === "COOLDOWN" && "Cooldown"}
                             </div>
+                            {/* {item?.status === "COOLDOWN" && item?.cooldownUntil && (
+                              <div className="mt-2 text-xs text-blue-400">
+                                Resumes at: {moment(item.cooldownUntil).format("YYYY.MM.DD HH:mm")}
+                              </div>
+                            )} */}
                           </div>
 
                           <div className="flex justify-between mt-4">
@@ -345,6 +354,12 @@ export default function Bot() {
                           <div className="mt-3 text-sm text-gray-400">
                             Leverage: {item?.leverage || 1}x
                           </div>
+                         
+
+{/* COOL DOWN INFO */}
+<div className="mt-2 text-xs text-blue-400 flex items-center gap-1">
+  ⏳ Resumes at: {moment(item.cooldownUntil).format("YYYY.MM.DD HH:mm")}
+</div>
                         </div>
                       );
                     })}

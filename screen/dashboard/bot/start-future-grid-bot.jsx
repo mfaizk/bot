@@ -120,6 +120,8 @@ export default function StartFutureGridBot() {
     const isWaiting = botStatus === "WAITING";
     const isRunning = botStatus === "RUNNING";
     const isStopped = botStatus === "STOPPED";
+    const isCooldown = botStatus === "COOLDOWN";
+    const isError = botStatus === "ERROR";
     console.log("Future Start Symbol:", botData?.symbol);
     return (
         <div className="min-h-screen  text-gray-200">
@@ -143,7 +145,9 @@ export default function StartFutureGridBot() {
                                             botStatus === "STOPPED" &&
                                             "bg-red-500/20 text-red-400",
                                             botStatus === "ERROR" &&
-                                            "bg-orange-500/20 text-orange-400"
+                                            "bg-orange-500/20 text-orange-400",
+                                            botStatus === "COOLDOWN" &&
+                                            "bg-blue-500/20 text-blue-400"
                                         )}
                                     >
                                         {botStatus === "RUNNING" && (
@@ -157,11 +161,15 @@ export default function StartFutureGridBot() {
                                         {botStatus === "ERROR" && (
                                             <span className="w-2 h-2 bg-orange-400 rounded-full animate-pulse"></span>
                                         )}
+                                        {botStatus === "COOLDOWN" && (
+                                            <span className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></span>
+                                        )}
 
                                         {botStatus === "RUNNING" && "Active"}
                                         {botStatus === "WAITING" && "Waiting"}
                                         {botStatus === "STOPPED" && "Stopped"}
                                         {botStatus === "ERROR" && "Error"}
+                                        {botStatus === "COOLDOWN" && "Cooldown"}
                                     </span>
                                 </div>
                                 <h1 className="text-3xl font-bold">
@@ -417,15 +425,19 @@ export default function StartFutureGridBot() {
                                                 updateBotStatusMutate();
                                             }
                                         }}
-                                        disabled={updatebotStatusPending || isWaiting}
+                                        disabled={updatebotStatusPending || isWaiting || isCooldown}
                                     >
                                         {updatebotStatusPending
                                             ? "Processing..."
                                             : isWaiting
                                                 ? "Waiting for Indicator..."
-                                                : isRunning
-                                                    ? "Liquidate/Delete Bot"
-                                                    : "Start Bot"}
+                                                : isCooldown
+                                                    ? "In Cooldown..."
+                                                    : isRunning
+                                                        ? "Liquidate/Delete Bot"
+                                                        : isError
+                                                            ? "Restart Bot"
+                                                            : "Start Bot"}
                                     </button>
 
                                     {botData?.enableIndicators && (
