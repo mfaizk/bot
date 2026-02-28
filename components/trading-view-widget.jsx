@@ -48,7 +48,7 @@ const TradingViewWidget = ({
   const containerRef = useRef(null);
   // const seriesRef = useRef();
   const seriesRef = useRef(null);
-const priceLinesRef = useRef([]);
+  const priceLinesRef = useRef([]);
   const [width, setWidth] = useState(0);
   const [mounted, setMounted] = useState(false);
   const [currentTimeFrame, setCurrentTimeFrame] = useState(
@@ -85,7 +85,9 @@ const priceLinesRef = useRef([]);
   useEffect(() => {
     setMounted(true);
   }, []);
-
+useEffect(() => {
+  setRows([]);
+}, [currentTimeFrame]);
   /** measure width */
   useEffect(() => {
     if (!containerRef.current) return;
@@ -98,63 +100,64 @@ const priceLinesRef = useRef([]);
     window.addEventListener("resize", resize);
     return () => window.removeEventListener("resize", resize);
   }, []);
-// useEffect(() => {
-//   if (!seriesRef.current) return;
+  // useEffect(() => {
+  //   if (!seriesRef.current) return;
 
-//   const series = seriesRef.current;
+  //   const series = seriesRef.current;
 
-//   // remove existing price lines
-//   priceLinesRef.current.forEach((line) => {
-//     series.removePriceLine(line);
-//   });
+  //   // remove existing price lines
+  //   priceLinesRef.current.forEach((line) => {
+  //     series.removePriceLine(line);
+  //   });
 
-//   priceLinesRef.current = [];
+  //   priceLinesRef.current = [];
 
-//   // helper to create line
-//   const addLine = (price, color, width, style, title) => {
-//     if (!price) return;
+  //   // helper to create line
+  //   const addLine = (price, color, width, style, title) => {
+  //     if (!price) return;
 
-//     const line = series.createPriceLine({
-//       price: Number(price),
-//       color,
-//       lineWidth: width,
-//       lineStyle: style,
-//       axisLabelVisible: true,
-//       title,
-//     });
+  //     const line = series.createPriceLine({
+  //       price: Number(price),
+  //       color,
+  //       lineWidth: width,
+  //       lineStyle: style,
+  //       axisLabelVisible: true,
+  //       title,
+  //     });
 
-//     priceLinesRef.current.push(line);
-//   };
+  //     priceLinesRef.current.push(line);
+  //   };
 
-//   // grid lines
-//   addLine(gridLower, "#3b82f6", 1, 2, "Grid Lower");
-//   addLine(gridUpper, "#3b82f6", 1, 2, "Grid Upper");
+  //   // grid lines
+  //   addLine(gridLower, "#3b82f6", 1, 2, "Grid Lower");
+  //   addLine(gridUpper, "#3b82f6", 1, 2, "Grid Upper");
 
-//   // stop loss lines
-//   addLine(lowerStopLossPrice, "#ef4444", 2, 0, "Lower SL");
-//   addLine(upperStopLossPrice, "#ef4444", 2, 0, "Upper SL");
+  //   // stop loss lines
+  //   addLine(lowerStopLossPrice, "#ef4444", 2, 0, "Lower SL");
+  //   addLine(upperStopLossPrice, "#ef4444", 2, 0, "Upper SL");
 
-// }, [gridLower, gridUpper, lowerStopLossPrice, upperStopLossPrice, rows]);
+  // }, [gridLower, gridUpper, lowerStopLossPrice, upperStopLossPrice, rows]);
   /** load historical REST data */
   useEffect(() => {
     if (!data.length) return;
 
     const formatted = data.map((c) => {
-      if (currentTimeFrame === "1D") {
-        const d = moment.unix(Number(c.time));
-        return {
-          time: {
-            year: d.year(),
-            month: d.month() + 1,
-            day: d.date(),
-          },
-          open: Number(c.open),
-          high: Number(c.high),
-          low: Number(c.low),
-          close: Number(c.close),
-          volume: Number(c.volume),
-        };
-      }
+      // if (currentTimeFrame === "1D") {
+      //   const d = moment.unix(Number(c.time));
+      //   return {
+      //     time: {
+      //       year: d.year(),
+      //       month: d.month() + 1,
+      //       day: d.date(),
+      //     },
+      //     open: Number(c.open),
+      //     high: Number(c.high),
+      //     low: Number(c.low),
+      //     close: Number(c.close),
+      //     volume: Number(c.volume),
+      //   };
+      // }
+
 
       return {
         time: Number(c.time),
@@ -216,17 +219,17 @@ const priceLinesRef = useRef([]);
     value: volume,
     color: close >= open ? "#26a69a" : "#ef5350",
   }));
-const createHorizontalLine = (price) => {
-  if (!rows.length) return [];
+  const createHorizontalLine = (price) => {
+    if (!rows.length) return [];
 
-  const first = rows[0];
-  const last = rows[rows.length - 1];
+    const first = rows[0];
+    const last = rows[rows.length - 1];
 
-  return [
-    { time: first.time, value: Number(price) },
-    { time: last.time, value: Number(price) },
-  ];
-};
+    return [
+      { time: first.time, value: Number(price) },
+      { time: last.time, value: Number(price) },
+    ];
+  };
   return (
     <div ref={containerRef} className="w-full">
       {/* timeframe buttons */}
@@ -253,6 +256,7 @@ const createHorizontalLine = (price) => {
         <>
           {/* PRICE CHART */}
           <Chart
+            key={`price-${currentTimeFrame}`}
             options={{
               width,
               height: 360,
@@ -266,79 +270,79 @@ const createHorizontalLine = (price) => {
               },
             }}
           >
-         <CandlestickSeries
-  ref={seriesRef}
-  data={candleData}
-  upColor="#26a69a"
-  downColor="#ef5350"
-  borderVisible={false}
-  wickUpColor="#26a69a"
-  wickDownColor="#ef5350"
- 
-/>
-{/* GRID LOWER */}
-{gridLower && rows.length > 0 && (
-  <LineSeries
-    key={`gridLower-${gridLower}`}
-    data={createHorizontalLine(gridLower)}
-    options={{
-      color: "#6cef44ff",
-      lineWidth: 3,
-      lineStyle: 2, // dotted
-      crosshairMarkerVisible: false,
-      lastValueVisible: false,
-      priceLineVisible: false,
-    }}
-  />
-)}
+            <CandlestickSeries
+              ref={seriesRef}
+              data={candleData}
+              upColor="#26a69a"
+              downColor="#ef5350"
+              borderVisible={false}
+              wickUpColor="#26a69a"
+              wickDownColor="#ef5350"
 
-{/* GRID UPPER */}
-{gridUpper && rows.length > 0 && (
-  <LineSeries
-    key={`gridUpper-${gridUpper}`}
-    data={createHorizontalLine(gridUpper)}
-    options={{
-      color: "#6cef44ff",
-      lineWidth: 3,
-      lineStyle: 2, // dotted
-      crosshairMarkerVisible: false,
-      lastValueVisible: false,
-      priceLineVisible: false,
-    }}
-  />
-)}
+            />
+            {/* GRID LOWER */}
+            {gridLower && rows.length > 0 && (
+              <LineSeries
+                key={`gridLower-${gridLower}`}
+                data={createHorizontalLine(gridLower)}
+                options={{
+                  color: "#6cef44ff",
+                  lineWidth: 3,
+                  lineStyle: 2, // dotted
+                  crosshairMarkerVisible: false,
+                  lastValueVisible: false,
+                  priceLineVisible: false,
+                }}
+              />
+            )}
 
-{/* LOWER STOP LOSS */}
-{lowerStopLossPrice && rows.length > 0 && (
-  <LineSeries
-    key={`lowerSL-${lowerStopLossPrice}`}
-    data={createHorizontalLine(lowerStopLossPrice)}
-    options={{
-      color: "#ef4444",
-      lineWidth: 3,
-      lineStyle: 2, // dotted
-      crosshairMarkerVisible: false,
-      lastValueVisible: false,
-      priceLineVisible: false,
-    }}
-  />
-)}
+            {/* GRID UPPER */}
+            {gridUpper && rows.length > 0 && (
+              <LineSeries
+                key={`gridUpper-${gridUpper}`}
+                data={createHorizontalLine(gridUpper)}
+                options={{
+                  color: "#6cef44ff",
+                  lineWidth: 3,
+                  lineStyle: 2, // dotted
+                  crosshairMarkerVisible: false,
+                  lastValueVisible: false,
+                  priceLineVisible: false,
+                }}
+              />
+            )}
 
-{/* UPPER STOP LOSS */}
-{upperStopLossPrice && rows.length > 0 && (
-  <LineSeries
-    key={`upperSL-${upperStopLossPrice}`}
-    data={createHorizontalLine(upperStopLossPrice)}
-    options={{
-      color: "#ef4444",
-      lineWidth: 3,
-      lineStyle: 2,
-      crosshairMarkerVisible: false,
-      lastValueVisible: false,
-      priceLineVisible: false,
-    }}
-  />
-)}
+            {/* LOWER STOP LOSS */}
+            {lowerStopLossPrice && rows.length > 0 && (
+              <LineSeries
+                key={`lowerSL-${lowerStopLossPrice}`}
+                data={createHorizontalLine(lowerStopLossPrice)}
+                options={{
+                  color: "#ef4444",
+                  lineWidth: 3,
+                  lineStyle: 2, // dotted
+                  crosshairMarkerVisible: false,
+                  lastValueVisible: false,
+                  priceLineVisible: false,
+                }}
+              />
+            )}
+
+            {/* UPPER STOP LOSS */}
+            {upperStopLossPrice && rows.length > 0 && (
+              <LineSeries
+                key={`upperSL-${upperStopLossPrice}`}
+                data={createHorizontalLine(upperStopLossPrice)}
+                options={{
+                  color: "#ef4444",
+                  lineWidth: 3,
+                  lineStyle: 2,
+                  crosshairMarkerVisible: false,
+                  lastValueVisible: false,
+                  priceLineVisible: false,
+                }}
+              />
+            )}
             <TimeScale>
               <TimeScaleFitContentTrigger deps={[candleData.length]} />
             </TimeScale>
@@ -346,6 +350,7 @@ const createHorizontalLine = (price) => {
 
           {/* VOLUME CHART */}
           <Chart
+            key={`volume-${currentTimeFrame}`}
             options={{
               width,
               height: 140,

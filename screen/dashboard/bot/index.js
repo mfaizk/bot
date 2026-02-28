@@ -309,13 +309,21 @@ export default function Bot() {
                             </div>
                             <div
                               className={clsx(
-                                "text-xs text-white px-2 py-1 rounded",
-                                item?.status === "RUNNING"
-                                  ? "bg-emerald-700/70"
-                                  : "bg-red-700/70"
+                                "flex items-center gap-2 text-xs px-3 py-1 rounded-full font-semibold",
+                                item?.status === "RUNNING" &&
+                                "bg-green-500/20 text-green-400",
+                                item?.status === "WAITING" &&
+                                "bg-yellow-500/20 text-yellow-400",
+                                item?.status === "STOPPED" &&
+                                "bg-red-500/20 text-red-400",
+                                item?.status === "ERROR" &&
+                                "bg-orange-500/20 text-orange-400"
                               )}
                             >
-                              {item?.status === "RUNNING" ? "Active" : "InActive"}
+                              {item?.status === "RUNNING" && "Active"}
+                              {item?.status === "WAITING" && "Waiting"}
+                              {item?.status === "STOPPED" && "Stopped"}
+                              {item?.status === "ERROR" && "Error"}
                             </div>
                           </div>
 

@@ -267,8 +267,8 @@ export default function CreateGridBot() {
                     },
                     {
                       name: "orderSize",
-                      label: `Order Size (${quoteCurrency})`,
-                      prefix: "$",
+                      label: `Order Size`,
+                      // prefix: "$",
                       tooltipInfo:
                         "This specifies the amount used for each individual buy order placed by the bot. Every grid buy uses this fixed quantity. Smaller order sizes result in more granular trades, while larger sizes increase exposure per trade. This value must be compatible with the exchange’s minimum order requirements.",
                       placeholder: "6",

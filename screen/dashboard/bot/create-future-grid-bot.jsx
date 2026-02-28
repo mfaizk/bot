@@ -18,74 +18,76 @@ const TradingViewWidget = dynamic(
 );
 
 const validationSchema = Yup.object({
-  gridLower: Yup.number()
-    .typeError("Grid lower must be a number")
-    .positive("Must be positive")
-    .required("Grid lower is required"),
+    gridLower: Yup.number()
+        .typeError("Grid lower must be a number")
+        .positive("Must be positive")
+        .required("Grid lower is required"),
 
-  gridUpper: Yup.number()
-    .typeError("Grid upper must be a number")
-    .positive("Must be positive")
-    .required("Grid upper is required")
-    .test(
-      "is-greater",
-      "Grid upper must be greater than grid lower",
-      function (value) {
-        const { gridLower } = this.parent;
-        if (!gridLower || !value) return true;
-        return Number(value) > Number(gridLower);
-      }
-    ),
+    gridUpper: Yup.number()
+        .typeError("Grid upper must be a number")
+        .positive("Must be positive")
+        .required("Grid upper is required")
+        .test(
+            "is-greater",
+            "Grid upper must be greater than grid lower",
+            function (value) {
+                const { gridLower } = this.parent;
+                if (!gridLower || !value) return true;
+                return Number(value) > Number(gridLower);
+            }
+        ),
 
-  investment: Yup.number()
-    .typeError("Investment must be a number")
-    .positive("Must be positive")
-    .min(10, "Minimum investment is 10 USDT")
-    .required("Investment is required"),
+    investment: Yup.number()
+        .typeError("Investment must be a number")
+        .positive("Must be positive")
+        .min(10, "Minimum investment is 10 USDT")
+        .required("Investment is required"),
 
-  gridCount: Yup.number()
-    .typeError("Grid count must be a number")
-    .integer("Must be an integer")
-    .min(2, "Minimum 2 grid levels required")
-    .max(100, "Maximum 100 grid levels allowed")
-    .required("Grid count is required"),
+    gridCount: Yup.number()
+        .typeError("Grid count must be a number")
+        .integer("Must be an integer")
+        .min(2, "Minimum 2 grid levels required")
+        .max(100, "Maximum 100 grid levels allowed")
+        .required("Grid count is required"),
 
-  orderSize: Yup.number()
-    .typeError("Order size must be a number")
-    .positive("Must be positive")
-    .required("Order size is required"),
+    orderSize: Yup.number()
+        .typeError("Order size must be a number")
+        .positive("Must be positive")
+        .required("Order size is required"),
 
-  leverage: Yup.number()
-  .typeError("Leverage must be a number")
-  .min(1, "Minimum leverage is 1x")
-  .max(5, "Maximum leverage allowed is 5x")
-  .required("Leverage is required"),
+    leverage: Yup.number()
+        .typeError("Leverage must be a number")
+        .min(1, "Minimum leverage is 1x")
+        .max(5, "Maximum leverage allowed is 5x")
+        .required("Leverage is required"),
 
-  lowerStopLossPrice: Yup.number()
-    .typeError("Lower stop loss must be a number")
-    .required("Lower stop loss is required")
-    .test(
-      "lower-sl-check",
-      "Lower Stop Loss must be below Grid Lower",
-      function (value) {
-        const { gridLower } = this.parent;
-        if (!gridLower || !value) return true;
-        return Number(value) < Number(gridLower);
-      }
-    ),
+    lowerStopLossPrice: Yup.number()
+        .typeError("Lower stop loss must be a number")
+        .required("Lower stop loss is required")
+        .test(
+            "lower-sl-check",
+            "Lower Stop Loss must be below Grid Lower",
+            function (value) {
+                const { gridLower } = this.parent;
+                if (!gridLower || !value) return true;
+                return Number(value) < Number(gridLower);
+            }
+        ),
 
-  upperStopLossPrice: Yup.number()
-    .typeError("Upper stop loss must be a number")
-    .required("Upper stop loss is required")
-    .test(
-      "upper-sl-check",
-      "Upper Stop Loss must be above Grid Upper",
-      function (value) {
-        const { gridUpper } = this.parent;
-        if (!gridUpper || !value) return true;
-        return Number(value) > Number(gridUpper);
-      }
-    ),
+    upperStopLossPrice: Yup.number()
+        .typeError("Upper stop loss must be a number")
+        .required("Upper stop loss is required")
+        .test(
+            "upper-sl-check",
+            "Upper Stop Loss must be above Grid Upper",
+            function (value) {
+                const { gridUpper } = this.parent;
+                if (!gridUpper || !value) return true;
+                return Number(value) > Number(gridUpper);
+            }
+        ),
+    hedgeModeConfirmed: Yup.boolean()
+        .oneOf([true], "You must confirm Hedge Mode is enabled"),
 });
 
 export default function CreateGridBot() {
@@ -126,6 +128,7 @@ export default function CreateGridBot() {
             lowerStopLossPrice: "",
             upperStopLossPrice: "",
             enableIndicators: false,
+            hedgeModeConfirmed: false,
         },
         enableReinitialize: true,
         validationSchema,
@@ -255,7 +258,14 @@ export default function CreateGridBot() {
                                     />
                                 </div>
                             </div>
-
+                            {selectedExchange && (
+                                <div className="mt-4 bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 p-4 rounded-xl text-sm">
+                                    ⚠️ Important: This bot requires <b>Hedge Mode (Dual Position Mode)</b>
+                                    to be enabled on your {selectedExchange} futures account.
+                                    <br />
+                                    Please enable Hedge Mode before creating or starting this bot.
+                                </div>
+                            )}
                             <div className="mt-6 grid grid-cols-1 lg:grid-cols-1 gap-6">
                                 <div className="lg:col-span-2">
                                     <div className="h-[500px]">
@@ -263,6 +273,7 @@ export default function CreateGridBot() {
                                     </div>
                                 </div>
                             </div>
+
                         </section>
 
                         <aside className="bg-[#0f0f11] rounded-2xl p-6 shadow-lg border border-[#1b1b1e]">
@@ -274,7 +285,7 @@ export default function CreateGridBot() {
 
                                 <div className="space-y-4">
                                     {[
-                                           {
+                                        {
                                             name: "gridUpper",
                                             label: `Grid Upper (${quoteCurrency})`,
                                             prefix: "$",
@@ -290,7 +301,7 @@ export default function CreateGridBot() {
                                                 "This is the lowest price level where the bot is allowed to place buy orders. The bot is long-only and will never buy above the current market price. All buy orders are placed between the current market price and this lower limit. This value defines how far downward the bot is willing to accumulate the asset during price dips.",
                                             placeholder: "Enter the lower range",
                                         },
-                                     
+
                                         {
                                             name: "investment",
                                             label: `investment (${quoteCurrency})`,
@@ -309,8 +320,8 @@ export default function CreateGridBot() {
                                         // },
                                         {
                                             name: "orderSize",
-                                            label: `Order Size (${quoteCurrency})`,
-                                            prefix: "$",
+                                            label: `Order Size`,
+                                            // prefix: "$",
                                             tooltipInfo:
                                                 "This specifies the amount used for each individual buy order placed by the bot. Every grid buy uses this fixed quantity. Smaller order sizes result in more granular trades, while larger sizes increase exposure per trade. This value must be compatible with the exchange’s minimum order requirements.",
                                             placeholder: "6",
@@ -414,10 +425,28 @@ export default function CreateGridBot() {
                                             }
                                         />
                                     </div>
+                                    <div className="flex items-start gap-3 mt-4">
+                                        <input
+                                            type="checkbox"
+                                            name="hedgeModeConfirmed"
+                                            checked={formik.values.hedgeModeConfirmed}
+                                            onChange={formik.handleChange}
+                                            className="mt-1"
+                                        />
+                                        <label className="text-sm text-gray-400">
+                                            I confirm that Hedge Mode (Dual Position Mode) is enabled on my futures account.
+                                        </label>
+                                    </div>
+
+                                    {formik.touched.hedgeModeConfirmed && formik.errors.hedgeModeConfirmed && (
+                                        <div className="text-red-500 text-xs mt-1">
+                                            {formik.errors.hedgeModeConfirmed}
+                                        </div>
+                                    )}
 
                                     <button
                                         type="submit"
-                                        disabled={isPending}
+                                        disabled={isPending || !formik.values.hedgeModeConfirmed}
                                         className="w-full mt-2 py-3 rounded-xl text-white font-semibold disabled:opacity-50"
                                         style={{ background: "var(--color-primary)" }}
                                     >

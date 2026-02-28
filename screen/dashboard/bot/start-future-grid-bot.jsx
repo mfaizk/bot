@@ -108,12 +108,18 @@ export default function StartFutureGridBot() {
             toast.error("Unable to delete bot");
         },
     });
+
     const formattedSymbol = botData?.symbol
         ? botData.symbol.split(":")[0].replace("/", "")
         : null;
-    const isBotRunning = useMemo(() => {
-        return botData?.status == "RUNNING";
-    }, [botData]);
+    const botStatus = botData?.status;
+
+    const isBotActive =
+        botStatus === "RUNNING" || botStatus === "WAITING";
+
+    const isWaiting = botStatus === "WAITING";
+    const isRunning = botStatus === "RUNNING";
+    const isStopped = botStatus === "STOPPED";
     console.log("Future Start Symbol:", botData?.symbol);
     return (
         <div className="min-h-screen  text-gray-200">
@@ -130,16 +136,32 @@ export default function StartFutureGridBot() {
                                     <span
                                         className={clsx(
                                             "flex items-center gap-2 px-3 py-1 rounded-full text-sm font-semibold",
-                                            botData?.status === "RUNNING" &&
+                                            botStatus === "RUNNING" &&
                                             "bg-green-500/20 text-green-400",
-                                            botData?.status === "STOPPED" &&
-                                            "bg-red-500/20 text-red-400"
+                                            botStatus === "WAITING" &&
+                                            "bg-yellow-500/20 text-yellow-400",
+                                            botStatus === "STOPPED" &&
+                                            "bg-red-500/20 text-red-400",
+                                            botStatus === "ERROR" &&
+                                            "bg-orange-500/20 text-orange-400"
                                         )}
                                     >
-                                        {botData?.status === "RUNNING" && (
+                                        {botStatus === "RUNNING" && (
                                             <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
                                         )}
-                                        {botData?.status}
+
+                                        {botStatus === "WAITING" && (
+                                            <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></span>
+                                        )}
+
+                                        {botStatus === "ERROR" && (
+                                            <span className="w-2 h-2 bg-orange-400 rounded-full animate-pulse"></span>
+                                        )}
+
+                                        {botStatus === "RUNNING" && "Active"}
+                                        {botStatus === "WAITING" && "Waiting"}
+                                        {botStatus === "STOPPED" && "Stopped"}
+                                        {botStatus === "ERROR" && "Error"}
                                     </span>
                                 </div>
                                 <h1 className="text-3xl font-bold">
@@ -388,25 +410,22 @@ export default function StartFutureGridBot() {
                                     <button
                                         className="w-full mt-2 py-3 rounded-xl text-white font-semibold bg-pink-600 hover:bg-pink-700 transition-all"
                                         onClick={() => {
-                                            if (botData?.status == "RUNNING") {
+                                            if (isBotActive) {
                                                 setCurrentSelectedItem(null);
                                                 setDeleteModalState(true);
                                             } else {
                                                 updateBotStatusMutate();
                                             }
                                         }}
-                                        disabled={updatebotStatusPending}
+                                        disabled={updatebotStatusPending || isWaiting}
                                     >
-                                        {updatebotStatusPending ? (
-                                            "Processing..."
-                                        ) : (
-                                            <>
-                                                {botData?.status == "RUNNING"
-                                                    ? "Liquidate/Delete "
-                                                    : "Start"}{" "}
-                                                Bot
-                                            </>
-                                        )}
+                                        {updatebotStatusPending
+                                            ? "Processing..."
+                                            : isWaiting
+                                                ? "Waiting for Indicator..."
+                                                : isRunning
+                                                    ? "Liquidate/Delete Bot"
+                                                    : "Start Bot"}
                                     </button>
 
                                     {botData?.enableIndicators && (
