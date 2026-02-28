@@ -329,11 +329,11 @@ export default function Bot() {
                               {item?.status === "ERROR" && "Error"}
                               {item?.status === "COOLDOWN" && "Cooldown"}
                             </div>
-                            {/* {item?.status === "COOLDOWN" && item?.cooldownUntil && (
+                            {item?.status === "COOLDOWN" && item?.cooldownUntil && (
                               <div className="mt-2 text-xs text-blue-400">
                                 Resumes at: {moment(item.cooldownUntil).format("YYYY.MM.DD HH:mm")}
                               </div>
-                            )} */}
+                            )}
                           </div>
 
                           <div className="flex justify-between mt-4">
@@ -356,10 +356,7 @@ export default function Bot() {
                           </div>
                          
 
-{/* COOL DOWN INFO */}
-<div className="mt-2 text-xs text-blue-400 flex items-center gap-1">
-  ⏳ Resumes at: {moment(item.cooldownUntil).format("YYYY.MM.DD HH:mm")}
-</div>
+
                         </div>
                       );
                     })}
