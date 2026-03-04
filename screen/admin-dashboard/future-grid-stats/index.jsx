@@ -114,7 +114,7 @@ export default function GridStats() {
   return (
     <div className="p-6 space-y-6">
       <h1 className="text-2xl font-semibold text-white">
-        Grid Bot Admin Dashboard
+        Future Grid Bot Admin Dashboard
       </h1>
 
       {/* SUMMARY CARDS */}
@@ -129,7 +129,7 @@ export default function GridStats() {
         ) : (
           <>
             <StatCard
-              title="Grid Bot Users"
+              title="Future Grid Bot Users"
               value={stats?.total_users}
               icon={Users}
             />
