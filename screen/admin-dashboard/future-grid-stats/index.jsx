@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { api, gridBotBaseUrl } from "@/service/api-service";
+import { api, futureGridBotBaseUrl } from "@/service/api-service";
 import {
   PieChart,
   Pie,
@@ -73,17 +73,17 @@ function StatCard({ title, value, subtitle, icon: Icon, duration = 900 }) {
 =============================== */
 
 const fetchStats = async () => {
-  const res = await api.get(`${gridBotBaseUrl}/admin/stats`);
+  const res = await api.get(`${futureGridBotBaseUrl}/admin/stats`);
   return res.data ?? null;
 };
 
 const fetchHealth = async () => {
-  const res = await api.get(`${gridBotBaseUrl}/admin/health`);
+  const res = await api.get(`${futureGridBotBaseUrl}/admin/health`);
   return res.data ?? null;
 };
 
 const fetchExchangeStats = async () => {
-  const res = await api.get(`${gridBotBaseUrl}/admin/exchange-stats`);
+  const res = await api.get(`${futureGridBotBaseUrl}/admin/exchange-stats`);
   const data = res.data;
 
   if (Array.isArray(data)) return data;

@@ -10,6 +10,7 @@ import {
   ChevronLeft,
   ChevronRight,
   User,
+  TrendingUp,
 } from "lucide-react";
 import Link from "next/link";
 import { IconCurrency, IconExchange, IconHistory } from "@tabler/icons-react";
@@ -38,7 +39,13 @@ export default function AdminSidebar({ isCollapsed, setIsCollapsed }) {
     {
       label: "Grid-Stats",
       path: "/admin/grid-stats",
-      Icon: User,
+      Icon: Bot,
+      type: "link",
+    },
+    {
+      label: "Future-Grid",
+      path: "/admin/future-grid-stats",
+      Icon: TrendingUp,
       type: "link",
     },
     { label: "Users", path: "/admin/user-list", Icon: User, type: "link" },
@@ -62,15 +69,13 @@ export default function AdminSidebar({ isCollapsed, setIsCollapsed }) {
     <>
       {/* Desktop Sidebar - hidden on small devices */}
       <div
-        className={`hidden pt-10 md:flex flex-col bg-gray-800 border-r border-gray-700 min-h-screen p-5 transition-all duration-200 ease-in-out ${
-          isCollapsed ? "w-20" : "w-64"
-        }`}
+        className={`hidden pt-10 md:flex flex-col bg-gray-800 border-r border-gray-700 min-h-screen p-5 transition-all duration-200 ease-in-out ${isCollapsed ? "w-20" : "w-64"
+          }`}
       >
         <div className="relative flex items-center justify-between mb-6">
           <h2
-            className={`text-2xl font-semibold text-primary transition-opacity duration-150 ${
-              isCollapsed ? "opacity-0 pointer-events-none" : "opacity-100"
-            }`}
+            className={`text-2xl font-semibold text-primary transition-opacity duration-150 ${isCollapsed ? "opacity-0 pointer-events-none" : "opacity-100"
+              }`}
           >
             Qbots
           </h2>
@@ -96,26 +101,23 @@ export default function AdminSidebar({ isCollapsed, setIsCollapsed }) {
                 <Link
                   key={label}
                   href={path}
-                  className={`group flex items-center gap-3 p-2 rounded-md transition-colors duration-150 ${
-                    isActive(path)
+                  className={`group flex items-center gap-3 p-2 rounded-md transition-colors duration-150 ${isActive(path)
                       ? "bg-primary text-white"
                       : "text-gray-300 hover:bg-gray-700"
-                  }`}
+                    }`}
                   title={label}
                 >
                   <div
-                    className={`flex items-center justify-center ${
-                      isCollapsed ? "w-full" : "w-6"
-                    }`}
+                    className={`flex items-center justify-center ${isCollapsed ? "w-full" : "w-6"
+                      }`}
                   >
                     <Icon />
                   </div>
                   <span
-                    className={`transition-opacity duration-150 whitespace-nowrap ${
-                      isCollapsed
+                    className={`transition-opacity duration-150 whitespace-nowrap ${isCollapsed
                         ? "opacity-0 w-0 overflow-hidden"
                         : "opacity-100"
-                    }`}
+                      }`}
                   >
                     {label}
                   </span>
@@ -126,18 +128,16 @@ export default function AdminSidebar({ isCollapsed, setIsCollapsed }) {
                 <button
                   key={label}
                   onClick={() => onClick && onClick()}
-                  className={`flex items-center gap-3 hover:bg-gray-700 p-2 rounded-md mt-auto transition-colors duration-150 ${
-                    isCollapsed ? "justify-center" : ""
-                  }`}
+                  className={`flex items-center gap-3 hover:bg-gray-700 p-2 rounded-md mt-auto transition-colors duration-150 ${isCollapsed ? "justify-center" : ""
+                    }`}
                   title={label}
                 >
                   <Icon />
                   <span
-                    className={`transition-opacity duration-150 whitespace-nowrap ${
-                      isCollapsed
+                    className={`transition-opacity duration-150 whitespace-nowrap ${isCollapsed
                         ? "opacity-0 w-0 overflow-hidden"
                         : "opacity-100"
-                    }`}
+                      }`}
                   >
                     {label}
                   </span>
